@@ -22,7 +22,7 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="py-16 md:py-24 text-center">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-          Mods for Claude Code
+          ClaudeMod
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
           {SITE_DESCRIPTION}
