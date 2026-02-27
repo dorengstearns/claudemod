@@ -26,7 +26,7 @@ export async function getTopMods(limit = PAGE_SIZE): Promise<Mod[]> {
     .from('mods')
     .select('*')
     .eq('status', 'approved')
-    .order('vote_count', { ascending: false })
+    .order('github_stars', { ascending: false })
     .limit(limit)
 
   if (error) {
@@ -85,7 +85,7 @@ export async function searchMods(params: {
   const { data, error } = await supabase.rpc('search_mods', {
     query: params.query || null,
     p_category: (params.category as CategoryValue) || null,
-    p_sort: params.sort || 'votes',
+    p_sort: params.sort || 'stars',
     p_limit: PAGE_SIZE,
     p_offset: ((params.page ?? 1) - 1) * PAGE_SIZE,
   })

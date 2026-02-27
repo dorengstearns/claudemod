@@ -11,7 +11,7 @@ interface FilterBarProps {
   activeSort?: string
 }
 
-export function FilterBar({ activeCategory, activeSort = 'votes' }: FilterBarProps) {
+export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -30,7 +30,7 @@ export function FilterBar({ activeCategory, activeSort = 'votes' }: FilterBarPro
     router.push('/browse')
   }
 
-  const hasFilters = activeCategory || (activeSort && activeSort !== 'votes')
+  const hasFilters = activeCategory || (activeSort && activeSort !== 'stars')
 
   return (
     <div className="flex items-center gap-3 flex-wrap">

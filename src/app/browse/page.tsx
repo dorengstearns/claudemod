@@ -39,7 +39,7 @@ async function ModResults({ q, category, sort, page }: { q?: string; category?: 
 
 export default async function BrowsePage({ searchParams }: BrowsePageProps) {
   const params = await searchParams
-  const { q, category, sort = 'votes', page } = params
+  const { q, category, sort = 'stars', page } = params
 
   const categoryCounts = await getCategoryCounts()
   const activeCategory = CATEGORIES.find((c) => c.value === category)

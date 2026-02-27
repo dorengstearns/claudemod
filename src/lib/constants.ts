@@ -67,9 +67,8 @@ export const CATEGORIES = [
 export type CategoryValue = (typeof CATEGORIES)[number]['value']
 
 export const SORT_OPTIONS = [
-  { value: 'votes', label: 'Most Voted' },
+  { value: 'stars', label: 'Most Stars' },
   { value: 'newest', label: 'Newest' },
-  { value: 'stars', label: 'GitHub Stars' },
 ] as const
 
 export type SortValue = (typeof SORT_OPTIONS)[number]['value']
