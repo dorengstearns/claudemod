@@ -25,9 +25,9 @@ export default async function HomePage() {
         <Image
           src="/mascot.png"
           alt="ClaudeMod mascot"
-          width={160}
-          height={160}
-          className="mx-auto mb-4"
+          width={200}
+          height={200}
+          className="mx-auto mb-4 translate-x-[5px]"
           priority
         />
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
