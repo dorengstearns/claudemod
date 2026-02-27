@@ -22,7 +22,7 @@ export function GitHubSignIn({
     const redirectTo = `${window.location.origin}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`
     await supabase.auth.signInWithOAuth({
       provider: 'github',
-      options: { redirectTo },
+      options: { redirectTo, scopes: 'public_repo' },
     })
   }
 

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Star, ExternalLink } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ModBadge } from '@/components/mods/ModBadge'
@@ -24,7 +24,7 @@ export function ModCard({ mod }: ModCardProps) {
               </h3>
             </Link>
           </div>
-          <VoteButton modId={mod.id} initialCount={mod.vote_count} slug={mod.slug} />
+          <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{mod.description}</p>
@@ -48,12 +48,6 @@ export function ModCard({ mod }: ModCardProps) {
 
       <CardFooter className="px-5 pb-4 pt-0 flex items-center justify-between text-xs text-muted-foreground">
         <div className="flex items-center gap-3">
-          {mod.github_stars > 0 && (
-            <span className="flex items-center gap-1">
-              <Star className="h-3 w-3" />
-              {mod.github_stars.toLocaleString()}
-            </span>
-          )}
           <span>by {mod.author_name ?? mod.author_github}</span>
         </div>
         <a

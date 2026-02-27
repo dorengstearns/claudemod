@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { ExternalLink, Star, Calendar, Github, ArrowLeft, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -65,7 +67,7 @@ export default async function ModPage({ params }: ModPageProps) {
           <p className="text-muted-foreground text-lg">{mod.description}</p>
         </div>
         <div className="flex flex-col items-end gap-3 shrink-0">
-          <VoteButton modId={mod.id} initialCount={mod.vote_count} slug={mod.slug} />
+          <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
           <a href={mod.github_url} target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="gap-2">
               <Github className="h-4 w-4" />
@@ -119,10 +121,32 @@ export default async function ModPage({ params }: ModPageProps) {
 
       {/* Long description */}
       {mod.long_description ? (
-        <div className="prose prose-sm dark:prose-invert max-w-none mb-10">
-          <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+        <div className="mb-10 text-sm leading-relaxed">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h1: ({ children }) => <h1 className="text-2xl font-bold mt-8 mb-3 first:mt-0">{children}</h1>,
+              h2: ({ children }) => <h2 className="text-xl font-semibold mt-6 mb-2 first:mt-0">{children}</h2>,
+              h3: ({ children }) => <h3 className="text-base font-semibold mt-4 mb-1.5">{children}</h3>,
+              p: ({ children }) => <p className="mb-4 text-foreground/90 leading-relaxed">{children}</p>,
+              ul: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-1">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-1">{children}</ol>,
+              li: ({ children }) => <li className="text-foreground/90">{children}</li>,
+              code: ({ children, ...props }) => {
+                const isBlock = 'node' in props
+                return isBlock
+                  ? <code className="block bg-muted rounded-md px-4 py-3 font-mono text-xs overflow-x-auto">{children}</code>
+                  : <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">{children}</code>
+              },
+              pre: ({ children }) => <pre className="mb-4 rounded-lg overflow-hidden">{children}</pre>,
+              a: ({ href, children }) => <a href={href ?? '#'} className="text-primary underline underline-offset-4 hover:no-underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+              blockquote: ({ children }) => <blockquote className="border-l-4 border-border pl-4 text-muted-foreground italic my-4">{children}</blockquote>,
+              hr: () => <hr className="border-border my-6" />,
+              strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+            }}
+          >
             {mod.long_description}
-          </pre>
+          </ReactMarkdown>
         </div>
       ) : (
         <div className="mb-10">
