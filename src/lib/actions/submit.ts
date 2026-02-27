@@ -1,6 +1,8 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { checkRateLimit } from '@/lib/rate-limit'
+import { checkGitHubRepoExists } from '@/lib/github'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { slugify } from '@/lib/utils'
@@ -37,6 +39,11 @@ export async function submitMod(
     redirect('/auth/signin?next=/submit')
   }
 
+  // 3 submissions per user per hour
+  if (!checkRateLimit(`submit:${user.id}`, 3, 60 * 60_000)) {
+    return { error: 'You have submitted too many mods recently. Please try again later.' }
+  }
+
   const raw = {
     github_url: formData.get('github_url') as string,
     name: formData.get('name') as string,
@@ -49,6 +56,11 @@ export async function submitMod(
 
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors as Record<string, string[]> }
+  }
+
+  const repoExists = await checkGitHubRepoExists(parsed.data.github_url)
+  if (!repoExists) {
+    return { error: { github_url: ['Repository not found. Please check the URL and try again.'] } }
   }
 
   const slug = slugify(parsed.data.name)

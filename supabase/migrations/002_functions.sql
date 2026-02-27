@@ -116,9 +116,10 @@ language sql stable as $$
   order by count desc;
 $$;
 
--- Get user's voted mod IDs (for hydrating vote state)
-create or replace function get_user_votes(p_user_id uuid)
+-- Get current user's voted mod IDs (for hydrating vote state)
+-- Uses auth.uid() internally — no parameter accepted to prevent cross-user enumeration
+create or replace function get_user_votes()
 returns table (mod_id uuid)
 language sql stable security definer as $$
-  select mod_id from public.votes where user_id = p_user_id;
+  select mod_id from public.votes where user_id = auth.uid();
 $$;

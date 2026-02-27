@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { checkRateLimit } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -24,6 +25,11 @@ export async function POST(request: Request) {
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // 20 vote toggles per user per 60 seconds
+  if (!checkRateLimit(`vote:${user.id}`, 20, 60_000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   }
 
   const { data, error } = await supabase.rpc('toggle_vote', {
