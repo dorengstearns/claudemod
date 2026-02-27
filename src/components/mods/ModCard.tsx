@@ -13,18 +13,24 @@ interface ModCardProps {
 
 export function ModCard({ mod }: ModCardProps) {
   return (
-    <Card className="group flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow border-border/60">
+    <Card className="group relative flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow border-border/60">
+      {/* Stretched link covers the whole card */}
+      <Link
+        href={`/mods/${mod.slug}`}
+        className="absolute inset-0 z-0"
+        aria-label={mod.name}
+      />
       <CardContent className="flex-1 p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
-            <ModBadge category={mod.category} className="mb-2" />
-            <Link href={`/mods/${mod.slug}`} className="block">
-              <h3 className="font-semibold text-base leading-tight group-hover:text-primary transition-colors line-clamp-1">
-                {mod.name}
-              </h3>
-            </Link>
+            <ModBadge category={mod.category} className="relative z-10 mb-2" />
+            <h3 className="font-semibold text-base leading-tight group-hover:text-primary transition-colors line-clamp-1">
+              {mod.name}
+            </h3>
           </div>
-          <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
+          <div className="relative z-10">
+            <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
+          </div>
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{mod.description}</p>
@@ -54,7 +60,7 @@ export function ModCard({ mod }: ModCardProps) {
           href={mod.github_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 hover:text-foreground transition-colors"
+          className="relative z-10 flex items-center gap-1 hover:text-foreground transition-colors"
           aria-label="View on GitHub"
         >
           <ExternalLink className="h-3 w-3" />
