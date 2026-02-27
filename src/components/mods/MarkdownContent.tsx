@@ -2,6 +2,8 @@
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 
 interface MarkdownContentProps {
   content: string
@@ -23,10 +25,20 @@ function resolveImageSrc(src: string, githubUrl?: string): string {
   }
 }
 
+// Allow style attribute on common elements for README compatibility
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    '*': [...(defaultSchema.attributes?.['*'] ?? []), 'style', 'align', 'width', 'height'],
+  },
+}
+
 export function MarkdownContent({ content, githubUrl }: MarkdownContentProps) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
       components={{
         h1: ({ children }) => <h1 className="text-2xl font-bold mt-8 mb-3 first:mt-0">{children}</h1>,
         h2: ({ children }) => <h2 className="text-xl font-semibold mt-6 mb-2 first:mt-0">{children}</h2>,
@@ -48,7 +60,7 @@ export function MarkdownContent({ content, githubUrl }: MarkdownContentProps) {
         strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
         img: ({ src, alt }) => (
           <img
-            src={resolveImageSrc(src ?? '', githubUrl)}
+            src={resolveImageSrc(typeof src === 'string' ? src : '', githubUrl)}
             alt={alt ?? ''}
             className="max-w-full rounded-md my-4"
           />
