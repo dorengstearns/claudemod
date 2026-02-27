@@ -12,7 +12,7 @@ export const revalidate = 60
 
 export default async function HomePage() {
   const [topMods, categoryCounts, totalCount] = await Promise.all([
-    getTopMods(6),
+    getTopMods(12),
     getCategoryCounts(),
     getTotalModCount(),
   ])
