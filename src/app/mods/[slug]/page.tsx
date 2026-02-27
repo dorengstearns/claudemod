@@ -121,7 +121,7 @@ export default async function ModPage({ params }: ModPageProps) {
       {/* Long description */}
       {mod.long_description ? (
         <div className="mb-10 text-sm leading-relaxed">
-          <MarkdownContent content={mod.long_description} />
+          <MarkdownContent content={mod.long_description} githubUrl={mod.github_url} />
         </div>
       ) : (
         <div className="mb-10">

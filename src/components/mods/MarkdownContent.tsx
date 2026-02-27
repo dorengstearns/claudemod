@@ -5,9 +5,25 @@ import remarkGfm from 'remark-gfm'
 
 interface MarkdownContentProps {
   content: string
+  githubUrl?: string
 }
 
-export function MarkdownContent({ content }: MarkdownContentProps) {
+function resolveImageSrc(src: string, githubUrl?: string): string {
+  if (!src || src.startsWith('http') || src.startsWith('data:')) return src
+  if (!githubUrl) return src
+  try {
+    const match = githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/)
+    if (!match) return src
+    const [, owner, repo] = match
+    const cleanRepo = repo.replace(/\.git$/, '')
+    const rawBase = `https://raw.githubusercontent.com/${owner}/${cleanRepo}/HEAD`
+    return `${rawBase}/${src.replace(/^\.?\//, '')}`
+  } catch {
+    return src
+  }
+}
+
+export function MarkdownContent({ content, githubUrl }: MarkdownContentProps) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -30,6 +46,23 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         blockquote: ({ children }) => <blockquote className="border-l-4 border-border pl-4 text-muted-foreground italic my-4">{children}</blockquote>,
         hr: () => <hr className="border-border my-6" />,
         strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+        img: ({ src, alt }) => (
+          <img
+            src={resolveImageSrc(src ?? '', githubUrl)}
+            alt={alt ?? ''}
+            className="max-w-full rounded-md my-4"
+          />
+        ),
+        table: ({ children }) => (
+          <div className="overflow-x-auto my-4">
+            <table className="w-full text-sm border-collapse">{children}</table>
+          </div>
+        ),
+        thead: ({ children }) => <thead className="border-b border-border">{children}</thead>,
+        tbody: ({ children }) => <tbody className="divide-y divide-border">{children}</tbody>,
+        tr: ({ children }) => <tr className="hover:bg-muted/40 transition-colors">{children}</tr>,
+        th: ({ children }) => <th className="text-left font-semibold px-3 py-2 text-foreground">{children}</th>,
+        td: ({ children }) => <td className="px-3 py-2 text-foreground/90">{children}</td>,
       }}
     >
       {content}
