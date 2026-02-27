@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Suspense } from 'react'
 import { Search, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -21,6 +22,14 @@ export default async function HomePage() {
     <div className="container mx-auto max-w-6xl px-4">
       {/* Hero */}
       <section className="py-16 md:py-24 text-center">
+        <Image
+          src="/mascot.png"
+          alt="ClaudeMod mascot"
+          width={160}
+          height={160}
+          className="mx-auto mb-4"
+          priority
+        />
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
           ClaudeMod
         </h1>
