@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 import { GitHubSignIn } from '@/components/shared/GitHubSignIn'
 import { UserAvatar } from '@/components/shared/UserAvatar'
 import { useAuth } from '@/components/shared/AuthProvider'
 import { Button } from '@/components/ui/button'
-import { Package, Search, Plus } from 'lucide-react'
+import { Search, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -23,7 +24,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Package className="h-5 w-5 text-primary" />
+          <Image src="/mascot.png" alt="" width={28} height={28} />
           <span>ClaudeMod</span>
         </Link>
 
