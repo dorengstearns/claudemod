@@ -55,6 +55,13 @@ export const CATEGORIES = [
     description: 'CLAUDE.md configuration files',
     color: 'text-cyan-500',
   },
+  {
+    value: 'ide-plugin' as const,
+    label: 'IDE Plugins',
+    icon: 'Code2',
+    description: 'VS Code, Neovim, JetBrains integrations',
+    color: 'text-indigo-500',
+  },
 ] as const
 
 export type CategoryValue = (typeof CATEGORIES)[number]['value']
