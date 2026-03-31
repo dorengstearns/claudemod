@@ -66,7 +66,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
       {/* Search + Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <Suspense>
-          <SearchBar className="flex-1" placeholder="Search by name, description, tags..." />
+          <SearchBar className="flex-1" placeholder="Search by name, description, tags..." autoFocus={true} />
         </Suspense>
         <Suspense>
           <FilterBar activeCategory={category as CategoryValue | undefined} activeSort={sort} />

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -18,6 +19,14 @@ const navLinks = [
 export function Navbar() {
   const pathname = usePathname()
   const { user, loading } = useAuth()
+  const [modifier, setModifier] = useState('⌘')
+
+  useEffect(() => {
+    if (typeof navigator !== 'undefined') {
+      const isMac = /Mac|iPod|iPhone|iPad/i.test(navigator.platform)
+      setModifier(isMac ? '⌘' : 'Ctrl')
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -49,13 +58,19 @@ export function Navbar() {
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Search link */}
-        <Link href="/browse">
-          <Button variant="outline" size="sm" className="gap-2 text-muted-foreground hidden sm:flex">
-            <Search className="h-3.5 w-3.5" />
-            <span className="text-xs">Search mods...</span>
-          </Button>
-        </Link>
+        {/* Search button */}
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-2 text-muted-foreground hidden sm:flex items-center group relative overflow-hidden transition-all hover:bg-accent hover:text-accent-foreground"
+          onClick={() => document.dispatchEvent(new CustomEvent('open-command-palette'))}
+        >
+          <Search className="h-3.5 w-3.5 transition-transform group-hover:scale-110" />
+          <span className="text-xs">Search mods...</span>
+          <kbd className="pointer-events-none hidden md:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 ml-2">
+            <span className="text-xs">{modifier}</span>K
+          </kbd>
+        </Button>
 
         {/* Submit */}
         {user && (
