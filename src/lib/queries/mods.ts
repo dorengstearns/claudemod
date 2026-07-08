@@ -33,8 +33,8 @@ export async function getTopMods(limit = PAGE_SIZE): Promise<Mod[]> {
     .from('mods')
     .select('*')
     .eq('status', 'approved')
-    .order('vote_count', { ascending: false })
     .order('github_stars', { ascending: false })
+    .order('vote_count', { ascending: false })
     .limit(Math.max(limit * 4, 50))
 
   if (error) {
