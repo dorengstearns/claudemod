@@ -202,7 +202,8 @@ An educational repository providing templates, config hacks, and step-by-step gu
   280,
   false,
   'approved'
-);
+)
+on conflict (slug) do nothing;
 
 -- Ensure vote counts are correct (safety measure)
 update public.mods m
