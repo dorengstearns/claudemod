@@ -20,20 +20,43 @@ export async function getFeaturedMods(): Promise<Mod[]> {
   return (data ?? []) as Mod[]
 }
 
+function getRepoKey(githubUrl: string): string {
+  const match = githubUrl.match(/github\.com\/([^/]+)\/([^/#?]+)/i)
+  if (!match) return githubUrl.toLowerCase()
+  return `${match[1]}/${match[2]}`.toLowerCase()
+}
+
 export async function getTopMods(limit = PAGE_SIZE): Promise<Mod[]> {
   const supabase = await createClient()
+  // Fetch a larger pool of mods to allow deduplication in memory
   const { data, error } = await supabase
     .from('mods')
     .select('*')
     .eq('status', 'approved')
+    .order('vote_count', { ascending: false })
     .order('github_stars', { ascending: false })
-    .limit(limit)
+    .limit(Math.max(limit * 4, 50))
 
   if (error) {
     console.warn('getTopMods error:', error)
     return []
   }
-  return (data ?? []) as Mod[]
+
+  const seenRepos = new Set<string>()
+  const uniqueMods: Mod[] = []
+
+  for (const mod of (data ?? [])) {
+    const repoKey = getRepoKey(mod.github_url)
+    if (!seenRepos.has(repoKey)) {
+      seenRepos.add(repoKey)
+      uniqueMods.push(mod)
+      if (uniqueMods.length >= limit) {
+        break
+      }
+    }
+  }
+
+  return uniqueMods
 }
 
 export async function getModBySlug(slug: string): Promise<Mod | null> {
