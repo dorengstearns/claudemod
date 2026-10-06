@@ -8,6 +8,8 @@ import { searchMods, getCategoryCounts } from '@/lib/queries/mods'
 import { CATEGORIES, SITE_NAME } from '@/lib/constants'
 import type { CategoryValue } from '@/lib/constants'
 
+export const revalidate = 300 // Cache browse results for 5 minutes
+
 interface BrowsePageProps {
   searchParams: Promise<{
     q?: string

@@ -19,6 +19,12 @@ interface ModPageProps {
   params: Promise<{ slug: string }>
 }
 
+export async function generateStaticParams() {
+  const { getAllModSlugs } = await import('@/lib/queries/mods')
+  const slugs = await getAllModSlugs()
+  return slugs.map((slug) => ({ slug }))
+}
+
 
 export async function generateMetadata({ params }: ModPageProps): Promise<Metadata> {
   const { slug } = await params

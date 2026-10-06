@@ -22,7 +22,7 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold mb-3">Categories</h3>
             <ul className="space-y-2">
-              {CATEGORIES.slice(0, 4).map((cat) => (
+              {CATEGORIES.slice(0, 5).map((cat) => (
                 <li key={cat.value}>
                   <Link
                     href={`/browse?category=${cat.value}`}
@@ -38,7 +38,7 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold mb-3">&nbsp;</h3>
             <ul className="space-y-2">
-              {CATEGORIES.slice(4).map((cat) => (
+              {CATEGORIES.slice(5).map((cat) => (
                 <li key={cat.value}>
                   <Link
                     href={`/browse?category=${cat.value}`}

@@ -13,7 +13,7 @@ const schema = z.object({
   github_url: z.string().regex(GITHUB_URL_REGEX, 'Must be a valid GitHub repository URL (e.g. https://github.com/owner/repo)'),
   name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name must be under 100 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters').max(500, 'Description must be under 500 characters'),
-  category: z.enum(['skill', 'mcp-server', 'command', 'agent', 'harness', 'hook', 'plugin', 'config'] as const, {
+  category: z.enum(['mod', 'skill', 'mcp-server', 'command', 'agent', 'harness', 'hook', 'plugin', 'config', 'ide-plugin'] as const, {
     error: 'Please select a valid category',
   }),
   tags: z.string().transform((s) =>

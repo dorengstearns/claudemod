@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import {
-  Workflow, Plug, Terminal, Bot, Layers, Zap, Package, FileText,
+  Workflow, Plug, Terminal, Bot, Layers, Zap, Package, FileText, Boxes, Code2,
 } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 const ICONS = {
-  Workflow, Plug, Terminal, Bot, Layers, Zap, Package, FileText,
+  Workflow, Plug, Terminal, Bot, Layers, Zap, Package, FileText, Boxes, Code2,
 } as Record<string, React.ComponentType<{ className?: string }>>
 
 interface CategoryNavProps {

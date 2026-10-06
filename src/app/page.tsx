@@ -1,18 +1,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Suspense } from 'react'
-import { Search, ArrowRight } from 'lucide-react'
+import { Search, ArrowRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModGrid } from '@/components/mods/ModGrid'
 import { ModCardSkeleton } from '@/components/mods/ModCardSkeleton'
 import { CategoryNav } from '@/components/browse/CategoryNav'
-import { getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
+import { getFeaturedMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
-export const revalidate = 60
+export const revalidate = 300
 
 export default async function HomePage() {
-  const [topMods, categoryCounts, totalCount] = await Promise.all([
+  const [featuredMods, topMods, categoryCounts, totalCount] = await Promise.all([
+    getFeaturedMods(),
     getTopMods(12),
     getCategoryCounts(),
     getTotalModCount(),
@@ -68,6 +69,30 @@ export default async function HomePage() {
         </div>
         <CategoryNav counts={categoryCounts} />
       </section>
+
+      {/* Featured Mods */}
+      {featuredMods.length > 0 && (
+        <section className="pb-12">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-amber-500" />
+              <h2 className="text-xl font-semibold">Featured Mods</h2>
+            </div>
+            <Link href="/browse?category=mod" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+              View all <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 3 }).map((_, i) => <ModCardSkeleton key={i} />)}
+              </div>
+            }
+          >
+            <ModGrid mods={featuredMods} />
+          </Suspense>
+        </section>
+      )}
 
       {/* Top Mods */}
       <section className="pb-16">

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient as createClient } from '@/lib/supabase/public'
 import type { Mod, ModWithRank } from '@/types/mod'
 import type { CategoryValue } from '@/lib/constants'
 import { PAGE_SIZE } from '@/lib/constants'
@@ -11,6 +11,7 @@ export async function getFeaturedMods(): Promise<Mod[]> {
     .eq('is_featured', true)
     .eq('status', 'approved')
     .order('vote_count', { ascending: false })
+    .order('github_stars', { ascending: false })
     .limit(6)
 
   if (error) {

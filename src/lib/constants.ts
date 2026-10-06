@@ -1,5 +1,12 @@
 export const CATEGORIES = [
   {
+    value: 'mod' as const,
+    label: 'Mods',
+    icon: 'Boxes',
+    description: 'In-process TypeScript UI & lifecycle plugins',
+    color: 'text-emerald-500',
+  },
+  {
     value: 'skill' as const,
     label: 'Skills',
     icon: 'Workflow',
@@ -77,5 +84,5 @@ export const PAGE_SIZE = 24
 
 export const SITE_NAME = 'ClaudeMod'
 export const SITE_DESCRIPTION =
-  'Discover, share, and install Claude Code modifications — skills, MCP servers, agents, harnesses, and more.'
+  'The community hub for Claude Code Mods — in-process TypeScript plugins, skills, MCP servers, hooks, and more.'
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://claudemod.com'
