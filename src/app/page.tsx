@@ -12,9 +12,9 @@ export const revalidate = 300
 
 export default async function HomePage() {
   const [anthropicMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
-    getAnthropicMods(12),
-    getRecentlyAddedMods(12),
-    getTopMods(12),
+    getAnthropicMods(20),
+    getRecentlyAddedMods(18),
+    getTopMods(18),
     getCategoryCounts(),
     getTotalModCount(),
   ])

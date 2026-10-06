@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Boxes, Clock, Sparkles, ArrowRight } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
 import { ModGrid } from '@/components/mods/ModGrid'
+import { UnfurlFeed } from '@/components/mods/UnfurlFeed'
 import type { Mod } from '@/types/mod'
 
 interface HomeModTabsProps {
@@ -75,38 +75,35 @@ export function HomeModTabs({ anthropicMods, recentMods, topMods }: HomeModTabsP
 
         {/* Tab 1: Anthropic Mods */}
         <TabsContent value="anthropic" className="mt-0 focus-visible:outline-none">
-          <ModGrid mods={anthropicMods} />
-          <div className="mt-10 text-center">
-            <Link href="/browse?category=mod">
-              <Button variant="outline" className="gap-2 px-6 h-10 font-medium hover:bg-emerald-500/10 hover:text-emerald-600 hover:border-emerald-500/40 transition-colors">
-                Browse all {anthropicMods.length} Anthropic Mods <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          <UnfurlFeed
+            viewMoreLabel={`View more Anthropic Mods (${anthropicMods.length})`}
+            browseAllHref="/browse?category=mod"
+            browseAllLabel={`Browse all ${anthropicMods.length} Anthropic Mods`}
+          >
+            <ModGrid mods={anthropicMods} />
+          </UnfurlFeed>
         </TabsContent>
 
         {/* Tab 2: Recently Added */}
         <TabsContent value="recent" className="mt-0 focus-visible:outline-none">
-          <ModGrid mods={recentMods} />
-          <div className="mt-10 text-center">
-            <Link href="/browse?sort=newest">
-              <Button variant="outline" className="gap-2 px-6 h-10 font-medium hover:bg-blue-500/10 hover:text-blue-600 hover:border-blue-500/40 transition-colors">
-                Browse all newest additions <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          <UnfurlFeed
+            viewMoreLabel="View more recent additions"
+            browseAllHref="/browse?sort=newest"
+            browseAllLabel="Browse all newest additions"
+          >
+            <ModGrid mods={recentMods} />
+          </UnfurlFeed>
         </TabsContent>
 
         {/* Tab 3: Top Mods */}
         <TabsContent value="top" className="mt-0 focus-visible:outline-none">
-          <ModGrid mods={topMods} />
-          <div className="mt-10 text-center">
-            <Link href="/browse">
-              <Button variant="outline" className="gap-2 px-6 h-10 font-medium hover:bg-amber-500/10 hover:text-amber-600 hover:border-amber-500/40 transition-colors">
-                Browse all Top Mods in directory <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          <UnfurlFeed
+            viewMoreLabel="View more top mods"
+            browseAllHref="/browse"
+            browseAllLabel="Browse all Top Mods in directory"
+          >
+            <ModGrid mods={topMods} />
+          </UnfurlFeed>
         </TabsContent>
       </Tabs>
     </section>
