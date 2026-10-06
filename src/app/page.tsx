@@ -1,11 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Suspense } from 'react'
-import { Search, ArrowRight, Boxes, Clock } from 'lucide-react'
+import { Search, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ModGrid } from '@/components/mods/ModGrid'
-import { ModCardSkeleton } from '@/components/mods/ModCardSkeleton'
 import { CategoryNav } from '@/components/browse/CategoryNav'
+import { HomeModTabs } from '@/components/home/HomeModTabs'
 import { FaqSection } from '@/components/home/FaqSection'
 import { getAnthropicMods, getRecentlyAddedMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
@@ -16,7 +14,7 @@ export default async function HomePage() {
   const [anthropicMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
     getAnthropicMods(6),
     getRecentlyAddedMods(6),
-    getTopMods(12),
+    getTopMods(6),
     getCategoryCounts(),
     getTotalModCount(),
   ])
@@ -72,74 +70,12 @@ export default async function HomePage() {
         <CategoryNav counts={categoryCounts} />
       </section>
 
-      {/* Anthropic Mods */}
-      {anthropicMods.length > 0 && (
-        <section className="pb-12">
-          <div className="flex items-center gap-2 mb-5">
-            <Boxes className="h-5 w-5 text-emerald-500" />
-            <h2 className="text-xl font-semibold">Anthropic Mods</h2>
-          </div>
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.from({ length: 6 }).map((_, i) => <ModCardSkeleton key={i} />)}
-              </div>
-            }
-          >
-            <ModGrid mods={anthropicMods} />
-          </Suspense>
-          <div className="mt-8 text-center">
-            <Link href="/browse?category=mod">
-              <Button variant="ghost" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                View more <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </section>
-      )}
-
-      {/* Recently Added */}
-      {recentMods.length > 0 && (
-        <section className="pb-12">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-blue-500" />
-              <h2 className="text-xl font-semibold">Recently Added</h2>
-            </div>
-            <Link href="/browse?sort=newest" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-              View all <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.from({ length: 6 }).map((_, i) => <ModCardSkeleton key={i} />)}
-              </div>
-            }
-          >
-            <ModGrid mods={recentMods} />
-          </Suspense>
-        </section>
-      )}
-
-      {/* Top Mods */}
-      <section className="pb-16">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-semibold">Top Mods</h2>
-          <Link href="/browse" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-            View all <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => <ModCardSkeleton key={i} />)}
-            </div>
-          }
-        >
-          <ModGrid mods={topMods} />
-        </Suspense>
-      </section>
+      {/* Tabbed Mods Discovery */}
+      <HomeModTabs
+        anthropicMods={anthropicMods}
+        recentMods={recentMods}
+        topMods={topMods}
+      />
 
       {/* SEO FAQ Section */}
       <FaqSection />
