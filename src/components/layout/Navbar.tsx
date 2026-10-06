@@ -9,8 +9,15 @@ import { GitHubSignIn } from '@/components/shared/GitHubSignIn'
 import { UserAvatar } from '@/components/shared/UserAvatar'
 import { useAuth } from '@/components/shared/AuthProvider'
 import { Button } from '@/components/ui/button'
-import { Search, Plus } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Search, Plus, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { CATEGORIES } from '@/lib/constants'
 
 const navLinks = [
   { href: '/browse', label: 'Browse' },
@@ -53,6 +60,31 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Categories dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-md transition-colors hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer outline-none"
+              >
+                <span>Categories</span>
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56 p-1.5">
+              {CATEGORIES.map((cat) => (
+                <DropdownMenuItem key={cat.value} asChild>
+                  <Link
+                    href={`/browse?category=${cat.value}`}
+                    className="flex items-center justify-between px-2.5 py-1.5 text-xs rounded-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors w-full"
+                  >
+                    <span className="font-medium">{cat.label}</span>
+                    <span className="text-[10px] text-muted-foreground truncate max-w-[110px]">{cat.description}</span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         {/* Spacer */}

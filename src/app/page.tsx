@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ModGrid } from '@/components/mods/ModGrid'
 import { ModCardSkeleton } from '@/components/mods/ModCardSkeleton'
 import { CategoryNav } from '@/components/browse/CategoryNav'
+import { FaqSection } from '@/components/home/FaqSection'
 import { getAnthropicMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
@@ -60,8 +61,8 @@ export default async function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="pb-12">
-        <div className="flex items-center justify-between mb-5">
+      <section className="pb-8">
+        <div className="flex items-center justify-between mb-3.5">
           <h2 className="text-xl font-semibold">Browse by Category</h2>
           <Link href="/browse" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
             View all <ArrowRight className="h-3.5 w-3.5" />
@@ -73,14 +74,9 @@ export default async function HomePage() {
       {/* Anthropic Mods */}
       {anthropicMods.length > 0 && (
         <section className="pb-12">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <Boxes className="h-5 w-5 text-emerald-500" />
-              <h2 className="text-xl font-semibold">Anthropic Mods</h2>
-            </div>
-            <Link href="/browse?category=mod" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-              View all <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+          <div className="flex items-center gap-2 mb-5">
+            <Boxes className="h-5 w-5 text-emerald-500" />
+            <h2 className="text-xl font-semibold">Anthropic Mods</h2>
           </div>
           <Suspense
             fallback={
@@ -119,6 +115,9 @@ export default async function HomePage() {
           <ModGrid mods={topMods} />
         </Suspense>
       </section>
+
+      {/* SEO FAQ Section */}
+      <FaqSection />
     </div>
   )
 }
