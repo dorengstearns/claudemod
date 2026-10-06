@@ -15,13 +15,13 @@ export function ModThumbnail({ src, alt }: ModThumbnailProps) {
   }
 
   return (
-    <div className="relative w-full h-36 bg-muted/25 dark:bg-muted/15 overflow-hidden border-b border-border/40 shrink-0 pointer-events-none">
+    <div className="relative w-full aspect-[16/9] bg-muted/25 dark:bg-muted/15 flex items-center justify-center overflow-hidden border-b border-border/40 shrink-0 pointer-events-none p-2.5">
       <img
         src={src}
         alt={alt}
         loading="lazy"
         onError={() => setHasError(true)}
-        className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+        className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.02]"
       />
     </div>
   )

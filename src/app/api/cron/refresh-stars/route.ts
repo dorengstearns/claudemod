@@ -2,6 +2,9 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { fetchGitHubStars } from '@/lib/github'
 import { NextResponse } from 'next/server'
 
+export const maxDuration = 300
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   const cronSecret = process.env.CRON_SECRET
   if (cronSecret) {
@@ -14,7 +17,7 @@ export async function GET(request: Request) {
   const supabase = createServiceClient()
   const { data: mods, error } = await supabase
     .from('mods')
-    .select('id, github_url')
+    .select('id, github_url, github_stars')
     .eq('status', 'approved')
 
   if (error || !mods) {
@@ -22,13 +25,25 @@ export async function GET(request: Request) {
   }
 
   let updated = 0
-  for (const mod of mods) {
-    const stars = await fetchGitHubStars(mod.github_url)
-    if (stars > 0) {
-      await supabase.from('mods').update({ github_stars: stars }).eq('id', mod.id)
-      updated++
-    }
+
+  // Process in concurrent batches of 5 to stay well within rate limits and execution windows
+  const BATCH_SIZE = 5
+  for (let i = 0; i < mods.length; i += BATCH_SIZE) {
+    const batch = mods.slice(i, i + BATCH_SIZE)
+    await Promise.all(
+      batch.map(async (mod) => {
+        try {
+          const stars = await fetchGitHubStars(mod.github_url)
+          if (stars > 0 && stars !== mod.github_stars) {
+            await supabase.from('mods').update({ github_stars: stars }).eq('id', mod.id)
+            updated++
+          }
+        } catch {
+          // Continue with next mod
+        }
+      })
+    )
   }
 
-  return NextResponse.json({ updated })
+  return NextResponse.json({ updated, total: mods.length })
 }

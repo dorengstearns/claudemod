@@ -77,7 +77,8 @@ export function isBadgeOrNonVisual(url: string): boolean {
     lower.includes('img.youtube.com') ||
     lower.includes('pbs.twimg.com') ||
     lower.includes('ufs.sh/f/') ||
-    lower.includes('capsule-render.vercel.app')
+    lower.includes('capsule-render.vercel.app') ||
+    lower.includes('cdn.jsdelivr.net')
 
   if (!isImageExt && !isImageHost) {
     return true
@@ -131,34 +132,57 @@ export function resolveImageSrc(src: string, githubUrl?: string | null): string 
   }
 }
 
+interface Candidate {
+  url: string
+  isRich: boolean
+}
+
 /**
- * Parses markdown/HTML content and extracts the first genuine content visual/preview image.
+ * Parses markdown/HTML content and extracts the best genuine visual preview image,
+ * prioritizing screenshots and demo animations over simple logos.
  */
 export function extractModVisual(longDescription?: string | null, githubUrl?: string | null): string | null {
   if (!longDescription) return null
 
-  // Match markdown ![]() avoiding nested [![badge](url)](link)
   const mdImg = /!\[([^\]]*)\]\(([^)]+)\)/g
-  // Match HTML <img src="...">
   const htmlImg = /<img[^>]+src=["']?([^"'>\s]+)["']?[^>]*>/gi
+  const htmlAlt = /alt=["']([^"']*)["']/i
+
+  const candidates: Candidate[] = []
 
   let match: RegExpExecArray | null
 
   while ((match = mdImg.exec(longDescription)) !== null) {
+    const altText = match[1] || ''
     const rawUrl = match[2].split(/\s+/)[0].trim().replace(/^<|>$/g, '')
     const resolved = resolveImageSrc(rawUrl, githubUrl)
     if (resolved && !isBadgeOrNonVisual(resolved)) {
-      return resolved
+      const lower = (altText + ' ' + resolved).toLowerCase()
+      const isRich =
+        /(screenshot|preview|demo|capture|screen|terminal|dashboard|ui|overview|example|report|workflow)/.test(lower) ||
+        resolved.toLowerCase().endsWith('.gif')
+      candidates.push({ url: resolved, isRich })
     }
   }
 
   while ((match = htmlImg.exec(longDescription)) !== null) {
+    const fullTag = match[0]
     const rawUrl = match[1].trim()
+    const altMatch = htmlAlt.exec(fullTag)
+    const altText = altMatch ? altMatch[1] : ''
     const resolved = resolveImageSrc(rawUrl, githubUrl)
     if (resolved && !isBadgeOrNonVisual(resolved)) {
-      return resolved
+      const lower = (altText + ' ' + resolved).toLowerCase()
+      const isRich =
+        /(screenshot|preview|demo|capture|screen|terminal|dashboard|ui|overview|example|report|workflow)/.test(lower) ||
+        resolved.toLowerCase().endsWith('.gif')
+      candidates.push({ url: resolved, isRich })
     }
   }
 
-  return null
+  if (candidates.length === 0) return null
+
+  // Prioritize rich UI screenshots / demo animations
+  const rich = candidates.find((c) => c.isRich)
+  return rich ? rich.url : candidates[0].url
 }
