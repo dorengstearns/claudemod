@@ -16,9 +16,11 @@ export default function Loading() {
       </div>
 
       {/* Skeleton Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <ModCardSkeleton key={i} />
+          <div key={i} className="break-inside-avoid mb-4">
+            <ModCardSkeleton />
+          </div>
         ))}
       </div>
     </div>

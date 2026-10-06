@@ -3,8 +3,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export function ModCardSkeleton() {
   return (
-    <Card className="flex flex-col h-full">
-      <CardContent className="flex-1 p-5">
+    <Card className="flex flex-col border-border/60">
+      <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1">
             <Skeleton className="h-5 w-16 mb-2" />

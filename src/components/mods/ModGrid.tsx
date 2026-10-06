@@ -11,9 +11,11 @@ interface ModGridProps {
 export function ModGrid({ mods, loading = false, skeletonCount = 6 }: ModGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
         {Array.from({ length: skeletonCount }).map((_, i) => (
-          <ModCardSkeleton key={i} />
+          <div key={i} className="break-inside-avoid mb-4">
+            <ModCardSkeleton />
+          </div>
         ))}
       </div>
     )
@@ -29,9 +31,11 @@ export function ModGrid({ mods, loading = false, skeletonCount = 6 }: ModGridPro
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
       {mods.map((mod) => (
-        <ModCard key={mod.id} mod={mod} />
+        <div key={mod.id} className="break-inside-avoid mb-4">
+          <ModCard mod={mod} />
+        </div>
       ))}
     </div>
   )

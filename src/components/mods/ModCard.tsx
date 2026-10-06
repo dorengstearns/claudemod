@@ -17,7 +17,7 @@ export function ModCard({ mod }: ModCardProps) {
   const visual = extractModVisual(mod.long_description, mod.github_url)
 
   return (
-    <Card className="group relative flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow border-border/60">
+    <Card className="group relative flex flex-col overflow-hidden hover:shadow-md transition-shadow border-border/60">
       {/* Stretched link covers the whole card */}
       <Link
         href={`/mods/${mod.slug}`}
@@ -27,7 +27,7 @@ export function ModCard({ mod }: ModCardProps) {
 
       {visual && <ModThumbnail src={visual} alt={mod.name} />}
 
-      <CardContent className="flex-1 p-5">
+      <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
             <ModBadge category={mod.category} className="relative z-10 mb-2" />
