@@ -39,6 +39,22 @@ export async function getAnthropicMods(limit = 6): Promise<Mod[]> {
   return (data ?? []) as Mod[]
 }
 
+export async function getRecentlyAddedMods(limit = 6): Promise<Mod[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('mods')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    console.warn('getRecentlyAddedMods error:', error)
+    return []
+  }
+  return (data ?? []) as Mod[]
+}
+
 function getRepoKey(githubUrl: string): string {
   const match = githubUrl.match(/github\.com\/([^/]+)\/([^/#?]+)/i)
   if (!match) return githubUrl.toLowerCase()

@@ -1,20 +1,21 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Suspense } from 'react'
-import { Search, ArrowRight, Boxes } from 'lucide-react'
+import { Search, ArrowRight, Boxes, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModGrid } from '@/components/mods/ModGrid'
 import { ModCardSkeleton } from '@/components/mods/ModCardSkeleton'
 import { CategoryNav } from '@/components/browse/CategoryNav'
 import { FaqSection } from '@/components/home/FaqSection'
-import { getAnthropicMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
+import { getAnthropicMods, getRecentlyAddedMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
 export const revalidate = 300
 
 export default async function HomePage() {
-  const [anthropicMods, topMods, categoryCounts, totalCount] = await Promise.all([
+  const [anthropicMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
     getAnthropicMods(6),
+    getRecentlyAddedMods(6),
     getTopMods(12),
     getCategoryCounts(),
     getTotalModCount(),
@@ -94,6 +95,30 @@ export default async function HomePage() {
               </Button>
             </Link>
           </div>
+        </section>
+      )}
+
+      {/* Recently Added */}
+      {recentMods.length > 0 && (
+        <section className="pb-12">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-blue-500" />
+              <h2 className="text-xl font-semibold">Recently Added</h2>
+            </div>
+            <Link href="/browse?sort=newest" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+              View all <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => <ModCardSkeleton key={i} />)}
+              </div>
+            }
+          >
+            <ModGrid mods={recentMods} />
+          </Suspense>
         </section>
       )}
 
