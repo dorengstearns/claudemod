@@ -4,33 +4,22 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import { resolveImageSrc } from '@/lib/visuals'
 
 interface MarkdownContentProps {
   content: string
   githubUrl?: string
 }
 
-function resolveImageSrc(src: string, githubUrl?: string): string {
-  if (!src || src.startsWith('http') || src.startsWith('data:')) return src
-  if (!githubUrl) return src
-  try {
-    const match = githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/)
-    if (!match) return src
-    const [, owner, repo] = match
-    const cleanRepo = repo.replace(/\.git$/, '')
-    const rawBase = `https://raw.githubusercontent.com/${owner}/${cleanRepo}/HEAD`
-    return `${rawBase}/${src.replace(/^\.?\//, '')}`
-  } catch {
-    return src
-  }
-}
-
-// Allow style attribute on common elements for README compatibility
+// Allow style attribute on common elements for README compatibility + allow video/source tags
 const sanitizeSchema = {
   ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames ?? []), 'video', 'source'],
   attributes: {
     ...defaultSchema.attributes,
     '*': [...(defaultSchema.attributes?.['*'] ?? []), 'style', 'align', 'width', 'height'],
+    video: ['src', 'controls', 'autoPlay', 'loop', 'muted', 'poster', 'width', 'height', 'playsInline'],
+    source: ['src', 'type'],
   },
 }
 
@@ -58,11 +47,27 @@ export function MarkdownContent({ content, githubUrl }: MarkdownContentProps) {
         blockquote: ({ children }) => <blockquote className="border-l-4 border-border pl-4 text-muted-foreground italic my-4">{children}</blockquote>,
         hr: () => <hr className="border-border my-6" />,
         strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
-        img: ({ src, alt }) => (
-          <img
-            src={resolveImageSrc(typeof src === 'string' ? src : '', githubUrl)}
-            alt={alt ?? ''}
-            className="max-w-full rounded-md my-4"
+        img: ({ src, alt }) => {
+          const resolved = resolveImageSrc(typeof src === 'string' ? src : '', githubUrl)
+          if (!resolved) return null
+          return (
+            <img
+              src={resolved}
+              alt={alt ?? ''}
+              loading="lazy"
+              className="max-w-full h-auto rounded-lg border border-border/40 shadow-xs my-4 max-h-[600px] object-contain"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }}
+            />
+          )
+        },
+        video: ({ src, ...props }) => (
+          <video
+            src={typeof src === 'string' ? resolveImageSrc(src, githubUrl) ?? src : undefined}
+            controls
+            className="max-w-full h-auto rounded-lg border border-border/40 shadow-xs my-4 max-h-[500px]"
+            {...props}
           />
         ),
         table: ({ children }) => (

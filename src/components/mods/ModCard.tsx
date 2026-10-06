@@ -3,8 +3,10 @@ import { ExternalLink } from 'lucide-react'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ModBadge } from '@/components/mods/ModBadge'
+import { ModThumbnail } from '@/components/mods/ModThumbnail'
 import { VoteButton } from '@/components/vote/VoteButton'
 import type { Mod } from '@/types/mod'
+import { extractModVisual } from '@/lib/visuals'
 import { formatDistanceToNow } from '@/lib/utils'
 
 interface ModCardProps {
@@ -12,6 +14,8 @@ interface ModCardProps {
 }
 
 export function ModCard({ mod }: ModCardProps) {
+  const visual = extractModVisual(mod.long_description, mod.github_url)
+
   return (
     <Card className="group relative flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow border-border/60">
       {/* Stretched link covers the whole card */}
@@ -20,6 +24,9 @@ export function ModCard({ mod }: ModCardProps) {
         className="absolute inset-0 z-0"
         aria-label={mod.name}
       />
+
+      {visual && <ModThumbnail src={visual} alt={mod.name} />}
+
       <CardContent className="flex-1 p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
