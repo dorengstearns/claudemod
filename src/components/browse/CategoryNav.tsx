@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import {
-  Workflow, Plug, Terminal, Bot, Layers, Zap, Package, FileText, Boxes, Code2,
+  Workflow, Plug, Terminal, Bot, Layers, Zap, Package, FileText, Boxes, Code2, Sparkles,
 } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
 import { cn } from '@/lib/utils'
@@ -13,12 +13,40 @@ const ICONS = {
 
 interface CategoryNavProps {
   counts?: Record<string, number>
+  totalCount?: number
   activeCategory?: string
+  className?: string
 }
 
-export function CategoryNav({ counts = {}, activeCategory }: CategoryNavProps) {
+export function CategoryNav({ counts = {}, totalCount, activeCategory, className }: CategoryNavProps) {
+  const isAllActive = activeCategory === 'all'
+
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div
+      className={cn(
+        'flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-0.5',
+        className
+      )}
+    >
+      {/* "All" pill */}
+      <Link
+        href="/browse"
+        className={cn(
+          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-colors shrink-0 font-medium',
+          isAllActive
+            ? 'bg-primary/10 text-primary font-semibold border border-primary/20'
+            : 'text-muted-foreground/80 hover:text-foreground bg-muted/40 hover:bg-muted/80 border border-border/40'
+        )}
+      >
+        <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+        <span>All</span>
+        {totalCount !== undefined && totalCount > 0 && (
+          <span className="text-[10px] text-muted-foreground/60 tabular-nums font-normal">
+            {totalCount}
+          </span>
+        )}
+      </Link>
+
       {CATEGORIES.map((cat) => {
         const Icon = ICONS[cat.icon]
         const count = counts[cat.value] ?? 0
@@ -29,9 +57,9 @@ export function CategoryNav({ counts = {}, activeCategory }: CategoryNavProps) {
             key={cat.value}
             href={`/browse?category=${cat.value}`}
             className={cn(
-              'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-colors',
+              'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-colors shrink-0 font-medium',
               isActive
-                ? 'bg-primary/10 text-primary font-medium border border-primary/20'
+                ? 'bg-primary/10 text-primary font-semibold border border-primary/20'
                 : 'text-muted-foreground/80 hover:text-foreground bg-muted/40 hover:bg-muted/80 border border-border/40'
             )}
           >
