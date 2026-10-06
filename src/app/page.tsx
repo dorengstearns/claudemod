@@ -12,9 +12,9 @@ export const revalidate = 300
 
 export default async function HomePage() {
   const [anthropicMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
-    getAnthropicMods(6),
-    getRecentlyAddedMods(6),
-    getTopMods(6),
+    getAnthropicMods(12),
+    getRecentlyAddedMods(12),
+    getTopMods(12),
     getCategoryCounts(),
     getTotalModCount(),
   ])
@@ -59,12 +59,14 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* Categories */}
-      <section className="pb-8">
-        <div className="flex items-center justify-between mb-3.5">
-          <h2 className="text-xl font-semibold">Browse by Category</h2>
-          <Link href="/browse" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-            View all <ArrowRight className="h-3.5 w-3.5" />
+      {/* Categories (Secondary Filter Strip) */}
+      <section className="pb-8 pt-1">
+        <div className="flex items-center justify-between mb-2.5">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+            Browse by Category
+          </span>
+          <Link href="/browse" className="text-xs text-muted-foreground/70 hover:text-foreground flex items-center gap-1 transition-colors">
+            View all <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
         <CategoryNav counts={categoryCounts} />
