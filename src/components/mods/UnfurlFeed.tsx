@@ -29,7 +29,8 @@ export function UnfurlFeed({
 
   useEffect(() => {
     if (contentRef.current) {
-      const isOverflowing = contentRef.current.scrollHeight > 750
+      const threshold = typeof window !== 'undefined' && window.innerWidth < 640 ? 660 : 740
+      const isOverflowing = contentRef.current.scrollHeight > threshold + 10
       setHasOverflow(isOverflowing)
     }
   }, [children])
@@ -64,7 +65,7 @@ export function UnfurlFeed({
             <button
               type="button"
               onClick={() => setIsExpanded(true)}
-              className="w-full group relative py-3.5 px-6 rounded-xl border border-border/80 bg-background/90 dark:bg-card/90 backdrop-blur-md hover:bg-muted/80 hover:border-primary/50 transition-all duration-200 shadow-sm flex items-center justify-center gap-2 text-sm font-semibold text-foreground cursor-pointer"
+              className="w-full group relative py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl border border-border/80 bg-background/90 dark:bg-card/90 backdrop-blur-md hover:bg-muted/80 hover:border-primary/50 transition-all duration-200 shadow-sm flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-foreground cursor-pointer"
             >
               <span>{viewMoreLabel}</span>
               <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-y-0.5 transition-transform" />
@@ -75,19 +76,19 @@ export function UnfurlFeed({
 
       {/* Clean horizontal anchor bar when unfurled */}
       {isExpanded && (
-        <div className="mt-8 pt-4 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+        <div className="mt-8 pt-4 border-t border-border/50 flex items-center justify-between gap-3 text-xs sm:text-sm">
           {browseAllHref && (
             <Link
               href={browseAllHref}
-              className="text-primary hover:underline font-medium flex items-center gap-1.5 transition-colors"
+              className="text-primary hover:underline font-medium flex items-center gap-1.5 transition-colors truncate"
             >
-              {browseAllLabel} <ArrowRight className="h-4 w-4" />
+              <span className="truncate">{browseAllLabel}</span> <ArrowRight className="h-3.5 w-3.5 shrink-0" />
             </Link>
           )}
           <button
             type="button"
             onClick={handleCollapse}
-            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 cursor-pointer transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1 cursor-pointer transition-colors shrink-0"
           >
             Show less <ChevronUp className="h-3.5 w-3.5" />
           </button>

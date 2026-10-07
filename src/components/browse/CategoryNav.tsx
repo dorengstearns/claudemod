@@ -73,6 +73,8 @@ export function CategoryNav({ counts = {}, totalCount, activeCategory, className
           </Link>
         )
       })}
+      {/* Mobile scroll end spacer */}
+      <div className="w-3 shrink-0 sm:hidden" aria-hidden="true" />
     </div>
   )
 }

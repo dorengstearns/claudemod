@@ -37,21 +37,21 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
+      <div className="container mx-auto flex h-14 max-w-6xl items-center gap-2 sm:gap-4 px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-semibold">
+        <Link href="/" className="flex items-center gap-2 font-semibold shrink-0">
           <Image src="/mascot.png" alt="" width={28} height={28} />
           <span>ClaudeMod</span>
         </Link>
 
         {/* Nav links */}
-        <nav className="flex items-center gap-1 ml-2">
+        <nav className="flex items-center gap-1 ml-1 sm:ml-2 shrink-0">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                'px-3 py-1.5 text-sm rounded-md transition-colors hover:bg-accent',
+                'px-2.5 sm:px-3 py-1.5 text-sm rounded-md transition-colors hover:bg-accent',
                 pathname === link.href
                   ? 'bg-accent text-accent-foreground font-medium'
                   : 'text-muted-foreground'
@@ -61,36 +61,49 @@ export function Navbar() {
             </Link>
           ))}
 
-          {/* Categories dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-md transition-colors hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer outline-none"
-              >
-                <span>Categories</span>
-                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 p-1.5">
-              {CATEGORIES.map((cat) => (
-                <DropdownMenuItem key={cat.value} asChild>
-                  <Link
-                    href={`/browse?category=${cat.value}`}
-                    className="flex items-center justify-between px-2.5 py-1.5 text-xs rounded-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors w-full"
-                  >
-                    <span className="font-medium">{cat.label}</span>
-                    <span className="text-[10px] text-muted-foreground truncate max-w-[110px]">{cat.description}</span>
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Categories dropdown (desktop only — mobile uses category strip below header) */}
+          <div className="hidden sm:block">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-md transition-colors hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer outline-none"
+                >
+                  <span>Categories</span>
+                  <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56 p-1.5">
+                {CATEGORIES.map((cat) => (
+                  <DropdownMenuItem key={cat.value} asChild>
+                    <Link
+                      href={`/browse?category=${cat.value}`}
+                      className="flex items-center justify-between px-2.5 py-1.5 text-xs rounded-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors w-full"
+                    >
+                      <span className="font-medium">{cat.label}</span>
+                      <span className="text-[10px] text-muted-foreground truncate max-w-[110px]">{cat.description}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </nav>
 
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Search button */}
+        {/* Search button — mobile icon */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="sm:hidden h-9 w-9 text-muted-foreground hover:text-foreground shrink-0"
+          onClick={() => document.dispatchEvent(new CustomEvent('open-command-palette'))}
+          aria-label="Search mods"
+        >
+          <Search className="h-4 w-4" />
+        </Button>
+
+        {/* Search button — desktop */}
         <Button 
           variant="outline" 
           size="sm" 

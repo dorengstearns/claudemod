@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Package } from 'lucide-react'
+import Image from 'next/image'
 import { CATEGORIES } from '@/lib/constants'
 
 export function Footer() {
@@ -10,7 +10,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 font-semibold mb-3">
-              <Package className="h-5 w-5 text-primary" />
+              <Image src="/mascot.png" alt="" width={22} height={22} />
               <span>ClaudeMod</span>
             </Link>
             <p className="text-sm text-muted-foreground">

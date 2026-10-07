@@ -27,9 +27,9 @@ export function GitHubSignIn({
   }
 
   return (
-    <Button variant={variant} size={size} onClick={handleSignIn} className="gap-2">
+    <Button variant={variant} size={size} onClick={handleSignIn} className="gap-2" aria-label={label}>
       <Github className="h-4 w-4" />
-      {label}
+      <span className="hidden sm:inline">{label}</span>
     </Button>
   )
 }

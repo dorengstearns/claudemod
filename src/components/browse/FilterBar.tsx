@@ -33,10 +33,10 @@ export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarPro
   const hasFilters = activeCategory || (activeSort && activeSort !== 'stars')
 
   return (
-    <div className="flex items-center gap-3 flex-wrap">
+    <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
       {/* Category filter */}
       <Select value={activeCategory ?? 'all'} onValueChange={(v) => updateParam('category', v === 'all' ? null : v)}>
-        <SelectTrigger className="w-40 h-9">
+        <SelectTrigger className="flex-1 min-w-[130px] sm:w-40 sm:flex-none h-9">
           <SelectValue placeholder="All categories" />
         </SelectTrigger>
         <SelectContent>
@@ -51,7 +51,7 @@ export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarPro
 
       {/* Sort */}
       <Select value={activeSort} onValueChange={(v) => updateParam('sort', v)}>
-        <SelectTrigger className="w-36 h-9">
+        <SelectTrigger className="flex-1 min-w-[110px] sm:w-36 sm:flex-none h-9">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

@@ -1,14 +1,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { Search, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CategoryNav } from '@/components/browse/CategoryNav'
 import { HomeModTabs } from '@/components/home/HomeModTabs'
-import { FaqSection } from '@/components/home/FaqSection'
 import { getAnthropicMods, getRecentlyAddedMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
 export const revalidate = 300
+
+export const metadata: Metadata = {
+  title: 'ClaudeMod — Directory for Claude Code Mods, Skills & Tools',
+  description: SITE_DESCRIPTION,
+}
 
 export default async function HomePage() {
   const [anthropicMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
@@ -37,30 +42,30 @@ export default async function HomePage() {
 
       <div className="container mx-auto max-w-6xl px-4">
         {/* Hero */}
-        <section className="py-14 md:py-20 text-center">
+        <section className="py-10 sm:py-14 md:py-20 text-center">
           <Image
             src="/mascot.png"
             alt="ClaudeMod mascot"
-            width={180}
-            height={180}
-            className="mx-auto mb-4"
+            width={160}
+            height={160}
+            className="mx-auto mb-3 w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40"
             priority
           />
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3">
             ClaudeMod
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8 px-2">
             {SITE_DESCRIPTION}
           </p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link href="/browse">
-              <Button size="lg" className="gap-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
+            <Link href="/browse" className="w-full sm:w-auto">
+              <Button size="lg" className="gap-2 w-full sm:w-auto cursor-pointer">
                 <Search className="h-4 w-4" />
                 Browse Mods
               </Button>
             </Link>
-            <Link href="/submit">
-              <Button size="lg" variant="outline">
+            <Link href="/submit" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto cursor-pointer">
                 Submit a Mod
               </Button>
             </Link>
@@ -68,7 +73,7 @@ export default async function HomePage() {
 
           {/* Stats */}
           {totalCount > 0 && (
-            <p className="mt-6 text-sm text-muted-foreground">
+            <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-muted-foreground">
               {totalCount} mod{totalCount !== 1 ? 's' : ''} and growing
             </p>
           )}
@@ -80,9 +85,6 @@ export default async function HomePage() {
           recentMods={recentMods}
           topMods={topMods}
         />
-
-        {/* SEO FAQ Section */}
-        <FaqSection />
       </div>
     </>
   )

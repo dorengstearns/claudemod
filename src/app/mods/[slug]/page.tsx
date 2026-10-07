@@ -63,15 +63,15 @@ export default async function ModPage({ params }: ModPageProps) {
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-6 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6 mb-6">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <ModBadge category={mod.category} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">{mod.name}</h1>
-          <p className="text-muted-foreground text-lg">{mod.description}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">{mod.name}</h1>
+          <p className="text-muted-foreground text-base sm:text-lg">{mod.description}</p>
         </div>
-        <div className="flex flex-col items-end gap-3 shrink-0">
+        <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2.5 sm:gap-3 shrink-0 w-full sm:w-auto">
           <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
           <a href={mod.github_url} target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="gap-2">
