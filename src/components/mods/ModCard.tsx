@@ -14,7 +14,7 @@ interface ModCardProps {
 }
 
 export function ModCard({ mod }: ModCardProps) {
-  const visual = extractModVisual(mod.long_description, mod.github_url)
+  const visual = mod.thumbnail_url ?? extractModVisual(mod.long_description, mod.github_url)
 
   return (
     <Card className="group relative flex flex-col overflow-hidden hover:shadow-md transition-shadow border-border/60">

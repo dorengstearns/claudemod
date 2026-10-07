@@ -7,7 +7,8 @@ export interface Mod {
   slug: string
   name: string
   description: string
-  long_description: string | null
+  long_description?: string | null
+  thumbnail_url?: string | null
   category: ModCategory
   github_url: string
   author_github: string

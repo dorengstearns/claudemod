@@ -1,5 +1,6 @@
 import { createServiceClient } from '@/lib/supabase/service'
 import { fetchGitHubReadme } from '@/lib/github'
+import { extractModVisual } from '@/lib/visuals'
 import { NextResponse } from 'next/server'
 
 export const maxDuration = 300
@@ -34,7 +35,11 @@ export async function GET(request: Request) {
         try {
           const readme = await fetchGitHubReadme(mod.github_url)
           if (readme && readme.length > 50) {
-            await supabase.from('mods').update({ long_description: readme }).eq('id', mod.id)
+            const thumbnail = extractModVisual(readme, mod.github_url)
+            await supabase.from('mods').update({
+              long_description: readme,
+              thumbnail_url: thumbnail ?? null,
+            }).eq('id', mod.id)
             updated++
           }
         } catch {
