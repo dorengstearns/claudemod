@@ -80,6 +80,7 @@ export function UnfurlFeed({
           {browseAllHref && (
             <Link
               href={browseAllHref}
+              prefetch={false}
               className="text-primary hover:underline font-medium flex items-center gap-1.5 transition-colors truncate"
             >
               <span className="truncate">{browseAllLabel}</span> <ArrowRight className="h-3.5 w-3.5 shrink-0" />

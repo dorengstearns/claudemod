@@ -21,6 +21,7 @@ export function ModCard({ mod }: ModCardProps) {
       {/* Stretched link covers the whole card */}
       <Link
         href={`/mods/${mod.slug}`}
+        prefetch={false}
         className="absolute inset-0 z-0"
         aria-label={mod.name}
       />

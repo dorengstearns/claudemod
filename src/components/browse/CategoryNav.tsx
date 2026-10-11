@@ -31,6 +31,7 @@ export function CategoryNav({ counts = {}, totalCount, activeCategory, className
       {/* "All" pill */}
       <Link
         href="/browse"
+        prefetch={false}
         className={cn(
           'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-colors shrink-0 font-medium',
           isAllActive
@@ -56,6 +57,7 @@ export function CategoryNav({ counts = {}, totalCount, activeCategory, className
           <Link
             key={cat.value}
             href={`/browse?category=${cat.value}`}
+            prefetch={false}
             className={cn(
               'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-colors shrink-0 font-medium',
               isActive

@@ -1,6 +1,7 @@
 import { createServiceClient } from '@/lib/supabase/service'
 import { fetchGitHubReadme } from '@/lib/github'
 import { extractModVisual } from '@/lib/visuals'
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 export const maxDuration = 300
@@ -47,6 +48,10 @@ export async function GET(request: Request) {
         }
       })
     )
+  }
+
+  if (updated > 0) {
+    revalidatePath('/')
   }
 
   return NextResponse.json({ updated, total: mods.length })

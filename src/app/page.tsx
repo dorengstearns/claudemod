@@ -8,7 +8,7 @@ import { HomeModTabs } from '@/components/home/HomeModTabs'
 import { getAnthropicMods, getRecentlyAddedMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
-export const revalidate = 300
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'ClaudeMod — Directory for Claude Code Mods, Skills & Tools',
@@ -32,6 +32,7 @@ export default async function HomePage() {
           <CategoryNav counts={categoryCounts} totalCount={totalCount} className="flex-1" />
           <Link
             href="/browse"
+            prefetch={false}
             className="hidden lg:flex items-center gap-1 text-xs text-muted-foreground/80 hover:text-foreground transition-colors shrink-0 font-medium pl-2"
           >
             <span>View all</span>
@@ -58,13 +59,13 @@ export default async function HomePage() {
             {SITE_DESCRIPTION}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
-            <Link href="/browse" className="w-full sm:w-auto">
+            <Link href="/browse" prefetch={false} className="w-full sm:w-auto">
               <Button size="lg" className="gap-2 w-full sm:w-auto cursor-pointer">
                 <Search className="h-4 w-4" />
                 Browse Mods
               </Button>
             </Link>
-            <Link href="/submit" className="w-full sm:w-auto">
+            <Link href="/submit" prefetch={false} className="w-full sm:w-auto">
               <Button size="lg" variant="outline" className="w-full sm:w-auto cursor-pointer">
                 Submit a Mod
               </Button>

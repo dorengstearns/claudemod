@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ChevronUp } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/components/shared/AuthProvider'
 import { cn } from '@/lib/utils'
 
 interface VoteButtonProps {
@@ -28,37 +29,38 @@ async function syncGitHubStar(githubUrl: string, star: boolean, providerToken: s
 }
 
 export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonProps) {
+  const { user, loading: authLoading } = useAuth()
   const [count, setCount] = useState(githubStars)
   const [voted, setVoted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) {
-        setHydrated(true)
-        return
-      }
-      const { data } = await supabase
-        .from('votes')
-        .select('id')
-        .eq('mod_id', modId)
-        .eq('user_id', user.id)
-        .maybeSingle()
-      setVoted(!!data)
+    if (authLoading) return
+    if (!user) {
       setHydrated(true)
-    })
-  }, [modId])
+      return
+    }
+    const supabase = createClient()
+    supabase
+      .from('votes')
+      .select('id')
+      .eq('mod_id', modId)
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setVoted(!!data)
+        setHydrated(true)
+      })
+  }, [modId, user, authLoading])
 
   const handleVote = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
     if (!user) {
       window.location.href = `/auth/signin?next=/mods/${slug}`
       return
     }
+
+    const supabase = createClient()
 
     const willBeVoted = !voted
 

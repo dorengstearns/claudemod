@@ -1,5 +1,6 @@
 import { createServiceClient } from '@/lib/supabase/service'
 import { fetchGitHubStars } from '@/lib/github'
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 export const maxDuration = 300
@@ -43,6 +44,10 @@ export async function GET(request: Request) {
         }
       })
     )
+  }
+
+  if (updated > 0) {
+    revalidatePath('/')
   }
 
   return NextResponse.json({ updated, total: mods.length })

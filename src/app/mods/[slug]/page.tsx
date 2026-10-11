@@ -13,7 +13,7 @@ import { getModBySlug, getRelatedMods } from '@/lib/queries/mods'
 import { SITE_NAME } from '@/lib/constants'
 import { formatDistanceToNow } from '@/lib/utils'
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 interface ModPageProps {
   params: Promise<{ slug: string }>
@@ -44,18 +44,17 @@ export async function generateMetadata({ params }: ModPageProps): Promise<Metada
 
 export default async function ModPage({ params }: ModPageProps) {
   const { slug } = await params
-  const [mod, related] = await Promise.all([
-    getModBySlug(slug),
-    getModBySlug(slug).then((m) => m ? getRelatedMods(m.category, slug, 3) : []),
-  ])
-
+  const mod = await getModBySlug(slug)
   if (!mod) notFound()
+
+  const related = await getRelatedMods(mod.category, slug, 3)
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Back link */}
       <Link
         href="/browse"
+        prefetch={false}
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -113,7 +112,7 @@ export default async function ModPage({ params }: ModPageProps) {
         <div className="flex items-center gap-2 flex-wrap mb-6">
           <Tag className="h-4 w-4 text-muted-foreground shrink-0" />
           {mod.tags.map((tag) => (
-            <Link key={tag} href={`/browse?q=${encodeURIComponent(tag)}`}>
+            <Link key={tag} href={`/browse?q=${encodeURIComponent(tag)}`} prefetch={false}>
               <Badge variant="outline" className="font-normal hover:border-primary/50 cursor-pointer">
                 {tag}
               </Badge>

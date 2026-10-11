@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createPublicClient as createClient } from '@/lib/supabase/public'
 import type { Mod, ModWithRank } from '@/types/mod'
 import type { CategoryValue } from '@/lib/constants'
@@ -102,7 +103,7 @@ export async function getTopMods(limit = PAGE_SIZE): Promise<Mod[]> {
   return uniqueMods
 }
 
-export async function getModBySlug(slug: string): Promise<Mod | null> {
+export const getModBySlug = cache(async (slug: string): Promise<Mod | null> => {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('mods')
@@ -113,7 +114,7 @@ export async function getModBySlug(slug: string): Promise<Mod | null> {
 
   if (error) return null
   return data as Mod
-}
+})
 
 export async function getAllModSlugs(): Promise<string[]> {
   const supabase = await createClient()

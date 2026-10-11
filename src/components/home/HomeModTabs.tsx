@@ -59,17 +59,17 @@ export function HomeModTabs({ anthropicMods, recentMods, topMods }: HomeModTabsP
 
           <div className="hidden sm:block">
             {activeTab === 'anthropic' && (
-              <Link href="/browse?category=mod" className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5 transition-colors">
+              <Link href="/browse?category=mod" prefetch={false} className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5 transition-colors">
                 View all Anthropic Mods <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}
             {activeTab === 'recent' && (
-              <Link href="/browse?sort=newest" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5 transition-colors">
+              <Link href="/browse?sort=newest" prefetch={false} className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5 transition-colors">
                 View all newest additions <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}
             {activeTab === 'top' && (
-              <Link href="/browse" className="text-sm font-medium text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1.5 transition-colors">
+              <Link href="/browse" prefetch={false} className="text-sm font-medium text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1.5 transition-colors">
                 Browse full directory <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}

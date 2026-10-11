@@ -50,6 +50,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               className={cn(
                 'px-2.5 sm:px-3 py-1.5 text-sm rounded-md transition-colors hover:bg-accent',
                 pathname === link.href
@@ -77,6 +78,7 @@ export function Navbar() {
                   <DropdownMenuItem key={cat.value} asChild>
                     <Link
                       href={`/browse?category=${cat.value}`}
+                      prefetch={false}
                       className="flex items-center justify-between px-2.5 py-1.5 text-xs rounded-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors w-full"
                     >
                       <span className="font-medium">{cat.label}</span>
@@ -119,7 +121,7 @@ export function Navbar() {
 
         {/* Submit */}
         {user && (
-          <Link href="/submit">
+          <Link href="/submit" prefetch={false}>
             <Button size="sm" variant="outline" className="gap-1.5 hidden sm:flex">
               <Plus className="h-4 w-4" />
               Submit

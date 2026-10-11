@@ -26,6 +26,7 @@ export function Footer() {
                 <li key={cat.value}>
                   <Link
                     href={`/browse?category=${cat.value}`}
+                    prefetch={false}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {cat.label}
@@ -42,6 +43,7 @@ export function Footer() {
                 <li key={cat.value}>
                   <Link
                     href={`/browse?category=${cat.value}`}
+                    prefetch={false}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {cat.label}
@@ -56,12 +58,12 @@ export function Footer() {
             <h3 className="text-sm font-semibold mb-3">Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/browse" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/browse" prefetch={false} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Browse All
                 </Link>
               </li>
               <li>
-                <Link href="/submit" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/submit" prefetch={false} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Submit a Mod
                 </Link>
               </li>
