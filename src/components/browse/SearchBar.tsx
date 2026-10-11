@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { useCallback, useState, useTransition } from 'react'
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
 import { Input } from '@/components/ui/input'
 import { Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -21,8 +21,15 @@ export function SearchBar({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [value, setValue] = useState(searchParams.get('q') ?? '')
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
 
   const updateSearch = useCallback(
     (q: string) => {
@@ -33,26 +40,38 @@ export function SearchBar({
         params.delete('q')
       }
       params.delete('page')
-      const target = pathname === '/browse' ? `/browse?${params.toString()}` : `/browse?q=${encodeURIComponent(q)}`
+      const queryString = params.toString()
+      const target = pathname === '/browse'
+        ? (queryString ? `/browse?${queryString}` : '/browse')
+        : `/browse?q=${encodeURIComponent(q)}`
       startTransition(() => {
-        router.push(target)
+        if (pathname === '/browse') {
+          router.replace(target, { scroll: false })
+        } else {
+          router.push(target)
+        }
       })
     },
     [pathname, router, searchParams]
   )
 
-  // Debounce
+  // Proper ref-based debounce so keystrokes don't fire a route navigation per character
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const q = e.target.value
       setValue(q)
-      const timer = setTimeout(() => updateSearch(q), 300)
-      return () => clearTimeout(timer)
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+      timerRef.current = setTimeout(() => updateSearch(q), 350)
     },
     [updateSearch]
   )
 
   const handleClear = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
     setValue('')
     updateSearch('')
   }
