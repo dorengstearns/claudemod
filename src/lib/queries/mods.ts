@@ -239,3 +239,15 @@ export async function getTotalModCount(): Promise<number> {
     .eq('status', 'approved')
   return count ?? 0
 }
+
+export async function getLastUpdatedAt(): Promise<string | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('mods')
+    .select('updated_at')
+    .eq('status', 'approved')
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return data?.updated_at ?? null
+}

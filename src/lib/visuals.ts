@@ -120,10 +120,17 @@ export function resolveImageSrc(src: string, githubUrl?: string | null): string 
     const b = branch || 'HEAD'
     const cleanSrc = clean.replace(/^\.?\//, '')
 
-    // If githubUrl had a subdirectory path (e.g. monorepo), resolve relative to that folder
+    // If githubUrl had a subdirectory path (e.g. monorepo), resolve relative (including ../) against that folder
     if (pathStr) {
       const dirPath = /\.[a-z0-9]+$/i.test(pathStr) ? pathStr.replace(/\/[^/]+$/, '') : pathStr
-      return `https://raw.githubusercontent.com/${owner}/${cleanRepo}/${b}/${dirPath}/${cleanSrc}`
+      const dirParts = dirPath.split('/').filter(Boolean)
+      const srcParts = cleanSrc.split('/').filter(Boolean)
+      while (srcParts[0] === '..') {
+        srcParts.shift()
+        dirParts.pop()
+      }
+      const joined = [...dirParts, ...srcParts].join('/')
+      return `https://raw.githubusercontent.com/${owner}/${cleanRepo}/${b}/${joined}`
     }
 
     return `https://raw.githubusercontent.com/${owner}/${cleanRepo}/${b}/${cleanSrc}`

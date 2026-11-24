@@ -235,6 +235,13 @@ export default async function ModPage({ params }: ModPageProps) {
           <dd className="text-muted-foreground">{formatDistanceToNow(mod.created_at)}</dd>
         </div>
 
+        {mod.updated_at && (
+          <div className="flex items-center justify-between gap-2">
+            <dt className="text-muted-foreground">Last synced</dt>
+            <dd className="text-muted-foreground">{formatDistanceToNow(mod.updated_at)}</dd>
+          </div>
+        )}
+
         {mod.hooks_events && mod.hooks_events.length > 0 && (
           <div className="pt-2 border-t border-border/50 space-y-1.5">
             <dt className="text-muted-foreground flex items-center gap-1.5">

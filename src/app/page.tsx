@@ -13,6 +13,7 @@ import {
   getTopMods,
   getCategoryCounts,
   getTotalModCount,
+  getLastUpdatedAt,
 } from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
@@ -23,17 +24,31 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
 }
 
+function formatUpdatedDate(iso: string | null): string | null {
+  if (!iso) return null
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return null
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(d)
+}
+
 export default async function HomePage() {
-  const [claudeMods, officialMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
+  const [claudeMods, officialMods, recentMods, topMods, categoryCounts, totalCount, lastUpdatedAt] = await Promise.all([
     getAnthropicMods(24),
     getOfficialMods(),
     getRecentlyAddedMods(18),
     getTopMods(18),
     getCategoryCounts(),
     getTotalModCount(),
+    getLastUpdatedAt(),
   ])
 
   const totalClaudeModsCount = categoryCounts['mod'] ?? claudeMods.length
+  const formattedLastUpdated = formatUpdatedDate(lastUpdatedAt)
 
   return (
     <>
@@ -89,12 +104,26 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {/* Stats */}
+          {/* Stats + Live Freshness Indicator */}
           {totalCount > 0 && (
-            <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-muted-foreground">
-              <strong className="text-foreground font-semibold">{totalClaudeModsCount}</strong> in-process Claude Mods ·{' '}
-              <strong className="text-foreground font-semibold">{totalCount}</strong> total curated extensions with scanned permissions &amp; install commands
-            </p>
+            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 text-xs sm:text-sm text-muted-foreground">
+              <span>
+                <strong className="text-foreground font-semibold">{totalClaudeModsCount}</strong> in-process Claude Mods
+              </span>
+              <span aria-hidden="true">·</span>
+              <span>
+                <strong className="text-foreground font-semibold">{totalCount}</strong> total curated extensions
+              </span>
+              {formattedLastUpdated && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                    Updated {formattedLastUpdated}
+                  </span>
+                </>
+              )}
+            </div>
           )}
         </section>
 
