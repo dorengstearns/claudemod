@@ -1,10 +1,11 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { approveMod, rejectMod } from '@/lib/actions/admin'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ExternalLink } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { ExternalLink, Mail } from 'lucide-react'
 
 type PendingMod = {
   id: string
@@ -32,17 +33,19 @@ export function AdminQueue({ mods }: { mods: PendingMod[] }) {
 
 function ModRow({ mod }: { mod: PendingMod }) {
   const [pending, startTransition] = useTransition()
+  const [sendEmail, setSendEmail] = useState(true)
+  const [reason, setReason] = useState('')
 
   return (
     <div className="border rounded-lg p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="font-semibold">{mod.name}</span>
             <Badge variant="outline" className="text-xs">{mod.category}</Badge>
           </div>
           <p className="text-sm text-muted-foreground">{mod.description}</p>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1 flex-wrap">
             <a
               href={mod.github_url}
               target="_blank"
@@ -61,20 +64,43 @@ function ModRow({ mod }: { mod: PendingMod }) {
           <Button
             size="sm"
             variant="outline"
-            className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+            className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 cursor-pointer"
             disabled={pending}
-            onClick={() => startTransition(() => rejectMod(mod.id))}
+            onClick={() => startTransition(() => rejectMod(mod.id, { reason, sendEmail }))}
           >
             Reject
           </Button>
           <Button
             size="sm"
+            className="cursor-pointer"
             disabled={pending}
-            onClick={() => startTransition(() => approveMod(mod.id))}
+            onClick={() => startTransition(() => approveMod(mod.id, { sendEmail }))}
           >
             Approve
           </Button>
         </div>
+      </div>
+
+      {/* Compact notification controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 pt-2 border-t border-border/50">
+        <Input
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="Optional rejection reason (included in rejection email)..."
+          className="h-8 text-xs flex-1"
+          disabled={pending}
+        />
+        <label className="inline-flex items-center gap-1.5 text-xs text-muted-foreground select-none cursor-pointer shrink-0">
+          <input
+            type="checkbox"
+            checked={sendEmail}
+            onChange={(e) => setSendEmail(e.target.checked)}
+            disabled={pending}
+            className="rounded border-border accent-primary"
+          />
+          <Mail className="h-3.5 w-3.5" />
+          <span>Email submitter</span>
+        </label>
       </div>
     </div>
   )
