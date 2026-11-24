@@ -97,8 +97,13 @@ export function buildApprovalEmailContent(params: {
           <div style="margin-bottom: 10px;">
             <a href="${escapeHtml(url)}" style="color: #059669; text-decoration: none; font-size: 14px;">${escapeHtml(url)}</a>
           </div>
-          <div style="font-size: 12px; color: #52525b; margin-bottom: 4px;">
+          <div style="font-size: 12px; color: #52525b; margin-bottom: 6px;">
             Optional README badge:
+          </div>
+          <div style="margin-bottom: 8px;">
+            <a href="${escapeHtml(url)}" style="text-decoration: none; display: inline-block; font-family: Verdana, Geneva, DejaVu Sans, sans-serif; font-size: 11px; line-height: 1; border-radius: 3px; overflow: hidden;">
+              <span style="display: inline-block; background: #555555; color: #ffffff; padding: 5px 8px;">Listed on</span><span style="display: inline-block; background: #10b981; color: #ffffff; padding: 5px 8px; font-weight: 600;">ClaudeMod</span>
+            </a>
           </div>
           <code style="display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: #27272a; background: #f4f4f5; padding: 8px 10px; border-radius: 6px; word-break: break-all;">${escapeHtml(badgeMd)}</code>
         </div>`
