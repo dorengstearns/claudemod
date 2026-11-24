@@ -103,7 +103,7 @@ function buildBacklogEmail(authorName, mods) {
     '',
     'We automatically pulled your README, GitHub stars, install commands, and static permission footprint. Just hit reply if anything on your listing looks off or if you want to update your description or screenshot.',
     '',
-    'Thanks for building for the Claude Code community,',
+    'Thanks for building with the Claude Mod community,',
     'ClaudeMod',
     SITE_URL,
   ].join('\n')
@@ -143,7 +143,7 @@ function buildBacklogEmail(authorName, mods) {
       We automatically synced your README, GitHub stars, install commands, and static permission footprint. Just hit reply if anything looks off or if you'd like to update your listing.
     </p>
     <p style="margin: 0; font-size: 14px; color: #3f3f46;">
-      Thanks for building for the Claude Code community,<br />
+      Thanks for building with the Claude Mod community,<br />
       <strong>ClaudeMod</strong> · <a href="${SITE_URL}" style="color: #059669; text-decoration: none;">claudemod.com</a>
     </p>
   </body>
