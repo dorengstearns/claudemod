@@ -14,6 +14,8 @@ import {
   Zap,
   Sparkles,
   ChevronRight,
+  Layers,
+  RefreshCw,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -74,6 +76,24 @@ export default async function ModPage({ params }: ModPageProps) {
   const permissionConfig = mod.permissions_level ? PERMISSION_LEVELS[mod.permissions_level] : null
   const hasPermissionPanel = Boolean(
     mod.category === 'mod' && (mod.permissions_level || (mod.permissions_labels && mod.permissions_labels.length > 0))
+  )
+  const cleanHookEvents = Array.from(
+    new Set(
+      (mod.hooks_events ?? [])
+        .map((raw) => {
+          const trimmed = raw.trim()
+          if (trimmed.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(trimmed) as { event?: string; name?: string }
+              return parsed.event || parsed.name || ''
+            } catch {
+              return trimmed
+            }
+          }
+          return trimmed
+        })
+        .filter(Boolean)
+    )
   )
 
   const jsonLd = {
@@ -186,7 +206,10 @@ export default async function ModPage({ params }: ModPageProps) {
 
         {subcategoryInfo && (
           <div className="flex items-center justify-between gap-2">
-            <dt className="text-muted-foreground">Sub-category</dt>
+            <dt className="text-muted-foreground flex items-center gap-1.5">
+              <Layers className="h-3.5 w-3.5" />
+              Sub-category
+            </dt>
             <dd>
               <Link
                 href={`/browse?category=mod&sub=${subcategoryInfo.value}`}
@@ -237,22 +260,25 @@ export default async function ModPage({ params }: ModPageProps) {
 
         {mod.updated_at && (
           <div className="flex items-center justify-between gap-2">
-            <dt className="text-muted-foreground">Last synced</dt>
+            <dt className="text-muted-foreground flex items-center gap-1.5">
+              <RefreshCw className="h-3.5 w-3.5" />
+              Last synced
+            </dt>
             <dd className="text-muted-foreground">{formatDistanceToNow(mod.updated_at)}</dd>
           </div>
         )}
 
-        {mod.hooks_events && mod.hooks_events.length > 0 && (
-          <div className="pt-2 border-t border-border/50 space-y-1.5">
+        {cleanHookEvents.length > 0 && (
+          <div className="pt-2.5 border-t border-border/50 space-y-2">
             <dt className="text-muted-foreground flex items-center gap-1.5">
               <Zap className="h-3.5 w-3.5" />
               Events hooked
             </dt>
-            <dd className="flex flex-wrap gap-1">
-              {mod.hooks_events.map((ev) => (
+            <dd className="flex flex-wrap gap-1.5">
+              {cleanHookEvents.map((ev) => (
                 <code
                   key={ev}
-                  className="px-1.5 py-0.5 rounded bg-muted font-mono text-[10px] text-foreground/85"
+                  className="px-2 py-0.5 rounded-md bg-muted/80 border border-border/60 font-mono text-[11px] text-foreground/90"
                 >
                   {ev}
                 </code>
