@@ -14,7 +14,7 @@ import {
   getModSubcategoryCounts,
   getFilteredModCount,
 } from '@/lib/queries/mods'
-import { CATEGORIES, MOD_SUBCATEGORIES, PAGE_SIZE, SITE_NAME } from '@/lib/constants'
+import { CATEGORIES, MOD_SUBCATEGORIES, PAGE_SIZE } from '@/lib/constants'
 import type { CategoryValue } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
@@ -48,7 +48,7 @@ export async function generateMetadata({ searchParams }: BrowsePageProps): Promi
     : `Browse and search Claude Code ${category?.label.toLowerCase() ?? 'mods, skills, MCP servers, and plugins'}.`
 
   return {
-    title: `${title} — ${SITE_NAME}`,
+    title,
     description,
   }
 }

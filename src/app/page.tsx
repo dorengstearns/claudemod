@@ -22,8 +22,13 @@ import { SITE_DESCRIPTION } from '@/lib/constants'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'ClaudeMod — Directory for Claude Code Mods, Skills & Tools',
+  title: {
+    absolute: 'ClaudeMod — Directory for Claude Code Mods, Skills & Tools',
+  },
   description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: '/',
+  },
 }
 
 function formatUpdatedDate(iso: string | null): string | null {

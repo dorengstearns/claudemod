@@ -55,8 +55,11 @@ export async function generateMetadata({ params }: ModPageProps): Promise<Metada
   if (!mod) return { title: 'Not Found' }
 
   return {
-    title: `${mod.name} — ${SITE_NAME}`,
+    title: mod.name,
     description: mod.description,
+    alternates: {
+      canonical: `/mods/${mod.slug}`,
+    },
     openGraph: {
       title: `${mod.name} — Claude Code Mod`,
       description: mod.description,

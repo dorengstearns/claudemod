@@ -143,4 +143,4 @@ export const PAGE_SIZE = 24
 export const SITE_NAME = 'ClaudeMod'
 export const SITE_DESCRIPTION =
   'The community hub for Claude Code Mods — in-process TypeScript plugins, skills, MCP servers, hooks, and more.'
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://claudemod.com'
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.claudemod.com'

@@ -3,12 +3,15 @@ import type { Metadata } from 'next'
 import { ArrowLeft, Terminal, ShieldCheck, Eye, Globe, CheckCircle2, Layers, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { PERMISSION_LEVELS, SITE_NAME } from '@/lib/constants'
+import { PERMISSION_LEVELS } from '@/lib/constants'
 
 export const metadata: Metadata = {
-  title: `How to Install Claude Code Mods — ${SITE_NAME}`,
+  title: 'How to Install Claude Code Mods',
   description:
     'Step-by-step guide to installing, testing, and auditing Claude Code 2.1.287+ in-process TypeScript mods safely using claude plugin marketplace and claude plugin validate.',
+  alternates: {
+    canonical: '/install',
+  },
 }
 
 export default function InstallGuidePage() {
