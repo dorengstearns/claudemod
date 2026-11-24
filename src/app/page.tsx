@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { Search, ArrowRight, Sparkles, BookOpen } from 'lucide-react'
+import { ArrowRight, Sparkles, BookOpen, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CategoryNav } from '@/components/browse/CategoryNav'
+import { HeroSearchBar } from '@/components/home/HeroSearchBar'
 import { HomeModTabs } from '@/components/home/HomeModTabs'
 import { ModCard } from '@/components/mods/ModCard'
 import {
@@ -12,6 +13,7 @@ import {
   getRecentlyAddedMods,
   getTopMods,
   getCategoryCounts,
+  getModSubcategoryCounts,
   getTotalModCount,
   getLastUpdatedAt,
 } from '@/lib/queries/mods'
@@ -37,12 +39,22 @@ function formatUpdatedDate(iso: string | null): string | null {
 }
 
 export default async function HomePage() {
-  const [claudeMods, officialMods, recentMods, topMods, categoryCounts, totalCount, lastUpdatedAt] = await Promise.all([
+  const [
+    claudeMods,
+    officialMods,
+    recentMods,
+    topMods,
+    categoryCounts,
+    modSubcategoryCounts,
+    totalCount,
+    lastUpdatedAt,
+  ] = await Promise.all([
     getAnthropicMods(24),
     getOfficialMods(),
     getRecentlyAddedMods(18),
     getTopMods(18),
     getCategoryCounts(),
+    getModSubcategoryCounts(),
     getTotalModCount(),
     getLastUpdatedAt(),
   ])
@@ -68,69 +80,76 @@ export default async function HomePage() {
       </div>
 
       <div className="container mx-auto max-w-6xl px-4">
-        {/* Hero */}
-        <section className="py-10 sm:py-14 md:py-18 text-center">
-          <Image
-            src="/mascot.png"
-            alt="ClaudeMod mascot"
-            width={160}
-            height={160}
-            className="mx-auto mb-3 w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40"
-            priority
-          />
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3">
-            ClaudeMod
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8 px-2">
-            {SITE_DESCRIPTION}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
-            <Link href="/browse?category=mod" prefetch={false} className="w-full sm:w-auto">
-              <Button size="lg" className="gap-2 w-full sm:w-auto cursor-pointer">
-                <Search className="h-4 w-4" />
-                Browse {totalClaudeModsCount} Mods
-              </Button>
-            </Link>
-            <Link href="/submit" prefetch={false} className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto cursor-pointer">
-                Submit a Mod
-              </Button>
-            </Link>
-            <Link href="/install" prefetch={false} className="w-full sm:w-auto">
-              <Button size="lg" variant="ghost" className="gap-1.5 w-full sm:w-auto cursor-pointer text-muted-foreground">
-                <BookOpen className="h-4 w-4" />
-                Install Guide
-              </Button>
-            </Link>
+        {/* Compact Hero — keeps Mod cards visible above the fold */}
+        <section className="py-6 sm:py-9 text-center">
+          <div className="flex items-center justify-center gap-3 mb-2.5">
+            <Image
+              src="/mascot.png"
+              alt="ClaudeMod mascot"
+              width={72}
+              height={72}
+              className="w-12 h-12 sm:w-14 sm:h-14"
+              priority
+            />
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              ClaudeMod
+            </h1>
           </div>
 
-          {/* Stats + Live Freshness Indicator */}
-          {totalCount > 0 && (
-            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 text-xs sm:text-sm text-muted-foreground">
-              <span>
-                <strong className="text-foreground font-semibold">{totalClaudeModsCount}</strong> in-process Claude Mods
-              </span>
-              <span aria-hidden="true">·</span>
-              <span>
-                <strong className="text-foreground font-semibold">{totalCount}</strong> total curated extensions
-              </span>
-              {formattedLastUpdated && (
-                <>
-                  <span aria-hidden="true">·</span>
-                  <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                    Updated {formattedLastUpdated}
-                  </span>
-                </>
-              )}
+          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-5 px-2">
+            {SITE_DESCRIPTION}
+          </p>
+
+          {/* Inline Search Bar */}
+          <div className="mb-4">
+            <HeroSearchBar totalCount={totalCount} />
+          </div>
+
+          {/* Stats + Quick Actions */}
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs sm:text-sm text-muted-foreground">
+            {totalCount > 0 && (
+              <>
+                <span>
+                  <strong className="text-foreground font-semibold">{totalClaudeModsCount}</strong> Claude Mods
+                </span>
+                <span aria-hidden="true">·</span>
+                <span>
+                  <strong className="text-foreground font-semibold">{totalCount}</strong> total extensions
+                </span>
+              </>
+            )}
+            {formattedLastUpdated && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                  Updated {formattedLastUpdated}
+                </span>
+              </>
+            )}
+            <span className="hidden sm:inline" aria-hidden="true">·</span>
+            <div className="flex items-center gap-2">
+              <Link href="/submit" prefetch={false}>
+                <Button size="sm" variant="outline" className="h-7 px-2.5 text-xs gap-1 cursor-pointer">
+                  <Plus className="h-3.5 w-3.5" />
+                  Submit
+                </Button>
+              </Link>
+              <Link href="/install" prefetch={false}>
+                <Button size="sm" variant="ghost" className="h-7 px-2.5 text-xs gap-1 text-muted-foreground cursor-pointer">
+                  <BookOpen className="h-3.5 w-3.5" />
+                  Install Guide
+                </Button>
+              </Link>
             </div>
-          )}
+          </div>
         </section>
 
         {/* Tabbed Mods Discovery */}
         <HomeModTabs
           claudeMods={claudeMods}
           totalClaudeModsCount={totalClaudeModsCount}
+          modSubcategoryCounts={modSubcategoryCounts}
           recentMods={recentMods}
           topMods={topMods}
         />

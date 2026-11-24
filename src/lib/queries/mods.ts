@@ -5,7 +5,7 @@ import type { CategoryValue } from '@/lib/constants'
 import { PAGE_SIZE } from '@/lib/constants'
 
 // Lean card projection that excludes heavy long_description (README) to minimize database egress by ~99%
-export const MOD_CARD_FIELDS = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, is_official, permissions_level, permissions_labels, surfaces, mod_subcategory, created_at, thumbnail_url'
+export const MOD_CARD_FIELDS = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, is_official, install_commands, permissions_level, permissions_labels, surfaces, mod_subcategory, created_at, thumbnail_url'
 const MOD_CARD_FIELDS_FALLBACK = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, created_at, thumbnail_url'
 
 async function fetchModCards(

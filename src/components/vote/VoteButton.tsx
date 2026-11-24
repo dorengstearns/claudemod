@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { ChevronUp } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/shared/AuthProvider'
 import { cn } from '@/lib/utils'
@@ -26,6 +26,12 @@ async function syncGitHubStar(githubUrl: string, star: boolean, providerToken: s
       'Content-Length': '0',
     },
   })
+}
+
+function formatStarCount(n: number): string {
+  if (n >= 10000) return `${(n / 1000).toFixed(1)}k`
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
+  return n.toLocaleString()
 }
 
 export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonProps) {
@@ -90,17 +96,32 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
     }
   }
 
+  const tooltip = voted
+    ? `${count.toLocaleString()} GitHub stars · Click to unstar`
+    : user
+    ? `${count.toLocaleString()} GitHub stars · Click to star on GitHub`
+    : `${count.toLocaleString()} GitHub stars · Sign in with GitHub to star`
+
   return (
     <Button
       variant={voted ? 'default' : 'outline'}
       size="sm"
       onClick={handleVote}
       disabled={loading || !hydrated}
-      className={cn('gap-1.5 min-w-[3.5rem] font-semibold tabular-nums', voted && 'bg-primary text-primary-foreground')}
-      aria-label={voted ? 'Remove vote' : 'Vote for this mod'}
+      title={tooltip}
+      className={cn(
+        'gap-1.5 min-w-[3.5rem] font-semibold tabular-nums cursor-pointer',
+        voted && 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:bg-amber-500/25'
+      )}
+      aria-label={voted ? 'Unstar this mod' : 'Star this mod on GitHub'}
     >
-      <ChevronUp className="h-4 w-4" />
-      {count.toLocaleString()}
+      <Star
+        className={cn(
+          'h-3.5 w-3.5 shrink-0',
+          voted ? 'fill-amber-500 text-amber-500' : 'text-amber-500/85'
+        )}
+      />
+      {formatStarCount(count)}
     </Button>
   )
 }

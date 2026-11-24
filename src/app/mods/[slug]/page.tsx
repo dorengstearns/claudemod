@@ -22,6 +22,7 @@ import { ModBadge } from '@/components/mods/ModBadge'
 import { ModGrid } from '@/components/mods/ModGrid'
 import { MarkdownContent } from '@/components/mods/MarkdownContent'
 import { CopyInstallBox } from '@/components/mods/CopyInstallBox'
+import { EmbedBadgeButton } from '@/components/mods/EmbedBadgeButton'
 import { PermissionPill } from '@/components/mods/PermissionPill'
 import { VoteButton } from '@/components/vote/VoteButton'
 import { getModBySlug, getRelatedMods } from '@/lib/queries/mods'
@@ -58,7 +59,6 @@ export async function generateMetadata({ params }: ModPageProps): Promise<Metada
       title: `${mod.name} — Claude Code Mod`,
       description: mod.description,
       type: 'article',
-      ...(mod.thumbnail_url ? { images: [{ url: mod.thumbnail_url }] } : {}),
     },
   }
 }
@@ -261,6 +261,7 @@ export default async function ModPage({ params }: ModPageProps) {
           </div>
         )}
       </dl>
+      <EmbedBadgeButton slug={mod.slug} modName={mod.name} />
     </div>
   )
 

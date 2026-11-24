@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { ModBadge } from '@/components/mods/ModBadge'
 import { ModThumbnail } from '@/components/mods/ModThumbnail'
 import { PermissionPill } from '@/components/mods/PermissionPill'
+import { QuickCopyInstall } from '@/components/mods/QuickCopyInstall'
 import { VoteButton } from '@/components/vote/VoteButton'
 import type { Mod } from '@/types/mod'
 import { MOD_SUBCATEGORIES } from '@/lib/constants'
@@ -86,20 +87,28 @@ export function ModCard({ mod }: ModCardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="px-5 pb-4 pt-0 flex items-center justify-between text-xs text-muted-foreground">
+      <CardFooter className="px-5 pb-4 pt-0 flex items-center justify-between gap-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-2 min-w-0">
           <span className="truncate">by {mod.author_name ?? mod.author_github}</span>
         </div>
-        <a
-          href={mod.github_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative z-10 flex items-center gap-1 hover:text-foreground transition-colors shrink-0"
-          aria-label="View on GitHub"
-        >
-          <ExternalLink className="h-3 w-3" />
-          GitHub
-        </a>
+        <div className="flex items-center gap-3 shrink-0">
+          <QuickCopyInstall
+            commands={mod.install_commands}
+            githubUrl={mod.github_url}
+            category={mod.category}
+            modName={mod.name}
+          />
+          <a
+            href={mod.github_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative z-10 flex items-center gap-1 hover:text-foreground transition-colors shrink-0"
+            aria-label="View on GitHub"
+          >
+            <ExternalLink className="h-3 w-3" />
+            GitHub
+          </a>
+        </div>
       </CardFooter>
     </Card>
   )

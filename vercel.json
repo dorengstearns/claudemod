@@ -16,7 +16,7 @@
   "redirects": [
     {
       "source": "/mods",
-      "destination": "/browse",
+      "destination": "/browse?category=mod",
       "permanent": false
     }
   ],

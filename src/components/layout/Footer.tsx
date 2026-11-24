@@ -74,6 +74,14 @@ export function Footer() {
               </li>
               <li>
                 <a
+                  href="/rss.xml"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  RSS Feed
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://github.com/anthropics/claude-code"
                   target="_blank"
                   rel="noopener noreferrer"

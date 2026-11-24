@@ -28,6 +28,11 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
+  alternates: {
+    types: {
+      'application/rss+xml': `${SITE_URL}/rss.xml`,
+    },
+  },
   openGraph: {
     type: 'website',
     siteName: SITE_NAME,

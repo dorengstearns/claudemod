@@ -27,8 +27,8 @@ export async function GET(request: Request) {
 
   let updated = 0
 
-  // Process in concurrent batches of 5 to stay well within rate limits and execution windows
-  const BATCH_SIZE = 5
+  // Process in concurrent batches of 10 to stay well within rate limits and execution windows
+  const BATCH_SIZE = 10
   for (let i = 0; i < mods.length; i += BATCH_SIZE) {
     const batch = mods.slice(i, i + BATCH_SIZE)
     await Promise.all(

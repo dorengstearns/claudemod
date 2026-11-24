@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { SearchBar } from '@/components/browse/SearchBar'
 import { FilterBar } from '@/components/browse/FilterBar'
+import { CategoryNav } from '@/components/browse/CategoryNav'
 import { ModGrid } from '@/components/mods/ModGrid'
 import { ModCardSkeleton } from '@/components/mods/ModCardSkeleton'
 import { Button } from '@/components/ui/button'
@@ -178,9 +179,23 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
 
   const baseParams = { q, category, sub, permission, surface, sort: sort === 'stars' ? undefined : sort }
   const totalModsCount = categoryCounts['mod'] ?? 0
+  const totalAllCount = Object.values(categoryCounts).reduce((a, b) => a + b, 0)
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <>
+      {/* Unified Category Pills Sub-Bar — matches homepage */}
+      <div className="sticky top-14 z-40 w-full border-b border-border/50 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-xs">
+        <div className="container mx-auto max-w-6xl px-4 py-2 flex items-center justify-between gap-4">
+          <CategoryNav
+            counts={categoryCounts}
+            totalCount={totalAllCount}
+            activeCategory={category ?? 'all'}
+            className="flex-1"
+          />
+        </div>
+      </div>
+
+      <div className="container mx-auto max-w-6xl px-4 py-7">
       <div className="mb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
         <div>
           <h1 className="text-2xl font-bold mb-1">{resultLabel}</h1>
@@ -285,5 +300,6 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
         />
       </Suspense>
     </div>
+    </>
   )
 }

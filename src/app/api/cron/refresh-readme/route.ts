@@ -27,7 +27,7 @@ export async function GET(request: Request) {
   }
 
   let updated = 0
-  const BATCH_SIZE = 5
+  const BATCH_SIZE = 10
 
   for (let i = 0; i < mods.length; i += BATCH_SIZE) {
     const batch = mods.slice(i, i + BATCH_SIZE)
