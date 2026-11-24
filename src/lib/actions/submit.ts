@@ -58,7 +58,9 @@ export async function submitMod(
     return { error: parsed.error.flatten().fieldErrors as Record<string, string[]> }
   }
 
-  const repoExists = await checkGitHubRepoExists(parsed.data.github_url)
+  const cleanUrl = parsed.data.github_url.trim().replace(/\.git\/?$/i, '').replace(/\/+$/, '')
+
+  const repoExists = await checkGitHubRepoExists(cleanUrl)
   if (!repoExists) {
     return { error: { github_url: ['Repository not found. Please check the URL and try again.'] } }
   }
@@ -70,7 +72,7 @@ export async function submitMod(
     name: parsed.data.name,
     description: parsed.data.description,
     category: parsed.data.category,
-    github_url: parsed.data.github_url,
+    github_url: cleanUrl,
     tags: parsed.data.tags,
     author_github: (user.user_metadata?.user_name as string) ?? 'unknown',
     author_name: (user.user_metadata?.full_name as string) ?? null,

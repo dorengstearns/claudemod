@@ -1,4 +1,4 @@
-import type { CategoryValue } from '@/lib/constants'
+import type { CategoryValue, ModSubcategoryValue, PermissionLevel } from '@/lib/constants'
 
 export type ModCategory = CategoryValue
 
@@ -17,6 +17,16 @@ export interface Mod {
   vote_count: number
   github_stars: number
   is_featured: boolean
+  is_official?: boolean
+  install_commands?: string[]
+  permissions_level?: PermissionLevel | null
+  permissions_labels?: string[]
+  hooks_events?: string[]
+  surfaces?: string[]
+  mod_subcategory?: ModSubcategoryValue | null
+  tested_claude_version?: string | null
+  license?: string | null
+  repo_subpath?: string | null
   created_at: string
   updated_at?: string
 }

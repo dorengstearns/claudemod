@@ -63,6 +63,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/install" prefetch={false} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Install Guide
+                </Link>
+              </li>
+              <li>
                 <Link href="/submit" prefetch={false} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Submit a Mod
                 </Link>

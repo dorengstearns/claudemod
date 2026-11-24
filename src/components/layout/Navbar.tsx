@@ -21,6 +21,7 @@ import { CATEGORIES } from '@/lib/constants'
 
 const navLinks = [
   { href: '/browse', label: 'Browse' },
+  { href: '/install', label: 'Install' },
 ]
 
 export function Navbar() {

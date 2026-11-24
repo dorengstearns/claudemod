@@ -1,11 +1,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { Search, ArrowRight } from 'lucide-react'
+import { Search, ArrowRight, Sparkles, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CategoryNav } from '@/components/browse/CategoryNav'
 import { HomeModTabs } from '@/components/home/HomeModTabs'
-import { getAnthropicMods, getRecentlyAddedMods, getTopMods, getCategoryCounts, getTotalModCount } from '@/lib/queries/mods'
+import { ModCard } from '@/components/mods/ModCard'
+import {
+  getAnthropicMods,
+  getOfficialMods,
+  getRecentlyAddedMods,
+  getTopMods,
+  getCategoryCounts,
+  getTotalModCount,
+} from '@/lib/queries/mods'
 import { SITE_DESCRIPTION } from '@/lib/constants'
 
 export const revalidate = 86400
@@ -16,13 +24,16 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const [anthropicMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
-    getAnthropicMods(20),
+  const [claudeMods, officialMods, recentMods, topMods, categoryCounts, totalCount] = await Promise.all([
+    getAnthropicMods(24),
+    getOfficialMods(),
     getRecentlyAddedMods(18),
     getTopMods(18),
     getCategoryCounts(),
     getTotalModCount(),
   ])
+
+  const totalClaudeModsCount = categoryCounts['mod'] ?? claudeMods.length
 
   return (
     <>
@@ -43,7 +54,7 @@ export default async function HomePage() {
 
       <div className="container mx-auto max-w-6xl px-4">
         {/* Hero */}
-        <section className="py-10 sm:py-14 md:py-20 text-center">
+        <section className="py-10 sm:py-14 md:py-18 text-center">
           <Image
             src="/mascot.png"
             alt="ClaudeMod mascot"
@@ -59,10 +70,10 @@ export default async function HomePage() {
             {SITE_DESCRIPTION}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
-            <Link href="/browse" prefetch={false} className="w-full sm:w-auto">
+            <Link href="/browse?category=mod" prefetch={false} className="w-full sm:w-auto">
               <Button size="lg" className="gap-2 w-full sm:w-auto cursor-pointer">
                 <Search className="h-4 w-4" />
-                Browse Mods
+                Browse {totalClaudeModsCount} Mods
               </Button>
             </Link>
             <Link href="/submit" prefetch={false} className="w-full sm:w-auto">
@@ -70,22 +81,60 @@ export default async function HomePage() {
                 Submit a Mod
               </Button>
             </Link>
+            <Link href="/install" prefetch={false} className="w-full sm:w-auto">
+              <Button size="lg" variant="ghost" className="gap-1.5 w-full sm:w-auto cursor-pointer text-muted-foreground">
+                <BookOpen className="h-4 w-4" />
+                Install Guide
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}
           {totalCount > 0 && (
             <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-muted-foreground">
-              {totalCount} mod{totalCount !== 1 ? 's' : ''} and growing
+              <strong className="text-foreground font-semibold">{totalClaudeModsCount}</strong> in-process Claude Mods ·{' '}
+              <strong className="text-foreground font-semibold">{totalCount}</strong> total curated extensions with scanned permissions &amp; install commands
             </p>
           )}
         </section>
 
         {/* Tabbed Mods Discovery */}
         <HomeModTabs
-          anthropicMods={anthropicMods}
+          claudeMods={claudeMods}
+          totalClaudeModsCount={totalClaudeModsCount}
           recentMods={recentMods}
           topMods={topMods}
         />
+
+        {/* Official Anthropic Example Mods Spotlight */}
+        {officialMods.length > 0 && (
+          <section className="pb-16 pt-2 border-t border-border/40">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pt-8">
+              <div>
+                <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  Official Example Mods from Anthropic
+                </h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Reference in-process mods from <code className="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">anthropics/claude-code-playground</code>
+                </p>
+              </div>
+              <a
+                href="https://github.com/anthropics/claude-code-playground/tree/main/claude-code/mods"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs sm:text-sm font-medium text-primary hover:underline flex items-center gap-1 shrink-0"
+              >
+                View playground repo <ArrowRight className="h-3.5 w-3.5" />
+              </a>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {officialMods.map((mod) => (
+                <ModCard key={mod.id} mod={mod} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   )

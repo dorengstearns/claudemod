@@ -9,29 +9,35 @@ import { UnfurlFeed } from '@/components/mods/UnfurlFeed'
 import type { Mod } from '@/types/mod'
 
 interface HomeModTabsProps {
-  anthropicMods: Mod[]
+  claudeMods: Mod[]
+  totalClaudeModsCount: number
   recentMods: Mod[]
   topMods: Mod[]
 }
 
-export function HomeModTabs({ anthropicMods, recentMods, topMods }: HomeModTabsProps) {
-  const [activeTab, setActiveTab] = useState('anthropic')
+export function HomeModTabs({
+  claudeMods,
+  totalClaudeModsCount,
+  recentMods,
+  topMods,
+}: HomeModTabsProps) {
+  const [activeTab, setActiveTab] = useState('mods')
 
   return (
-    <section className="pb-16 pt-2">
-      <Tabs defaultValue="anthropic" value={activeTab} onValueChange={setActiveTab} className="w-full">
+    <section className="pb-14 pt-2">
+      <Tabs defaultValue="mods" value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Prominent Hero Tabs Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-3 border-b border-border/40">
           <TabsList className="h-11 sm:h-12 p-1 sm:p-1.5 bg-muted/80 dark:bg-muted/50 w-full sm:w-auto grid grid-cols-3 sm:inline-flex rounded-xl border border-border/60 shadow-xs">
             <TabsTrigger
-              value="anthropic"
+              value="mods"
               className="gap-1.5 sm:gap-2 px-1.5 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border-border/40"
             >
               <Boxes className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
-              <span className="hidden sm:inline">Anthropic Mods</span>
-              <span className="sm:hidden">Anthropic</span>
-              <span className="hidden md:inline-block text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold ml-1">
-                {anthropicMods.length}
+              <span className="hidden sm:inline">Claude Mods</span>
+              <span className="sm:hidden">Mods</span>
+              <span className="hidden md:inline-block text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold ml-1 tabular-nums">
+                {totalClaudeModsCount}
               </span>
             </TabsTrigger>
 
@@ -52,15 +58,15 @@ export function HomeModTabs({ anthropicMods, recentMods, topMods }: HomeModTabsP
               className="gap-1.5 sm:gap-2 px-1.5 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border-border/40"
             >
               <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 shrink-0" />
-              <span className="hidden sm:inline">Top Mods</span>
+              <span className="hidden sm:inline">Top All-Time</span>
               <span className="sm:hidden">Top</span>
             </TabsTrigger>
           </TabsList>
 
           <div className="hidden sm:block">
-            {activeTab === 'anthropic' && (
+            {activeTab === 'mods' && (
               <Link href="/browse?category=mod" prefetch={false} className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5 transition-colors">
-                View all Anthropic Mods <ArrowRight className="h-3.5 w-3.5" />
+                Browse all {totalClaudeModsCount} Claude Mods <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}
             {activeTab === 'recent' && (
@@ -76,14 +82,14 @@ export function HomeModTabs({ anthropicMods, recentMods, topMods }: HomeModTabsP
           </div>
         </div>
 
-        {/* Tab 1: Anthropic Mods */}
-        <TabsContent value="anthropic" className="mt-0 focus-visible:outline-none">
+        {/* Tab 1: Claude Mods (In-process TypeScript Mods) */}
+        <TabsContent value="mods" className="mt-0 focus-visible:outline-none">
           <UnfurlFeed
-            viewMoreLabel={`View more Anthropic Mods (${anthropicMods.length})`}
+            viewMoreLabel={`View more Claude Mods (${totalClaudeModsCount} total)`}
             browseAllHref="/browse?category=mod"
-            browseAllLabel={`Browse all ${anthropicMods.length} Anthropic Mods`}
+            browseAllLabel={`Browse all ${totalClaudeModsCount} Claude Mods`}
           >
-            <ModGrid mods={anthropicMods} />
+            <ModGrid mods={claudeMods} />
           </UnfurlFeed>
         </TabsContent>
 
@@ -98,12 +104,12 @@ export function HomeModTabs({ anthropicMods, recentMods, topMods }: HomeModTabsP
           </UnfurlFeed>
         </TabsContent>
 
-        {/* Tab 3: Top Mods */}
+        {/* Tab 3: Top All-Time */}
         <TabsContent value="top" className="mt-0 focus-visible:outline-none">
           <UnfurlFeed
             viewMoreLabel="View more top mods"
             browseAllHref="/browse"
-            browseAllLabel="Browse all Top Mods in directory"
+            browseAllLabel="Browse full directory"
           >
             <ModGrid mods={topMods} />
           </UnfurlFeed>

@@ -5,8 +5,8 @@ import type { CategoryValue } from '@/lib/constants'
 import { PAGE_SIZE } from '@/lib/constants'
 
 // Lean card projection that excludes heavy long_description (README) to minimize database egress by ~99%
-export const MOD_CARD_FIELDS = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, created_at, thumbnail_url'
-const MOD_CARD_FIELDS_FALLBACK = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, created_at'
+export const MOD_CARD_FIELDS = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, is_official, permissions_level, permissions_labels, surfaces, mod_subcategory, created_at, thumbnail_url'
+const MOD_CARD_FIELDS_FALLBACK = 'id, slug, name, description, category, github_url, author_github, author_name, tags, vote_count, github_stars, is_featured, created_at, thumbnail_url'
 
 async function fetchModCards(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -140,9 +140,25 @@ export async function getRelatedMods(category: CategoryValue, excludeSlug: strin
   )
 }
 
+export async function getOfficialMods(): Promise<Mod[]> {
+  const supabase = await createClient()
+  return fetchModCards((fields) =>
+    supabase
+      .from('mods')
+      .select(fields)
+      .eq('is_official', true)
+      .eq('status', 'approved')
+      .order('name', { ascending: true })
+      .limit(6)
+  )
+}
+
 export async function searchMods(params: {
   query?: string
   category?: string
+  subcategory?: string
+  permission?: string
+  surface?: string
   sort?: string
   page?: number
 }): Promise<ModWithRank[]> {
@@ -154,6 +170,9 @@ export async function searchMods(params: {
     p_sort: params.sort || 'stars',
     p_limit: PAGE_SIZE,
     p_offset: ((params.page ?? 1) - 1) * PAGE_SIZE,
+    p_subcategory: params.subcategory || null,
+    p_permission: params.permission || null,
+    p_surface: params.surface || null,
   })
 
   if (error) {
@@ -161,6 +180,45 @@ export async function searchMods(params: {
     return []
   }
   return (data ?? []) as ModWithRank[]
+}
+
+export async function getModSubcategoryCounts(): Promise<Record<string, number>> {
+  const supabase = await createClient()
+  const { data, error } = await supabase.rpc('get_mod_subcategory_counts')
+  if (error) return {}
+  const counts: Record<string, number> = {}
+  for (const row of data ?? []) {
+    if (row.mod_subcategory) counts[row.mod_subcategory] = Number(row.count)
+  }
+  return counts
+}
+
+export async function getFilteredModCount(params: {
+  query?: string
+  category?: string
+  subcategory?: string
+  permission?: string
+  surface?: string
+}): Promise<number> {
+  const supabase = await createClient()
+  let q = supabase
+    .from('mods')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'approved')
+
+  if (params.category) q = q.eq('category', params.category)
+  if (params.subcategory) q = q.eq('mod_subcategory', params.subcategory)
+  if (params.permission) q = q.eq('permissions_level', params.permission)
+  if (params.surface) q = q.contains('surfaces', [params.surface])
+  if (params.query) {
+    const safe = params.query.replace(/[,%()]/g, '')
+    if (safe) {
+      q = q.or(`name.ilike.%${safe}%,description.ilike.%${safe}%,author_github.ilike.%${safe}%`)
+    }
+  }
+
+  const { count } = await q
+  return count ?? 0
 }
 
 export async function getCategoryCounts(): Promise<Record<string, number>> {

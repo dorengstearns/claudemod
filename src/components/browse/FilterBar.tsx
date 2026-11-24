@@ -3,15 +3,24 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { CATEGORIES, SORT_OPTIONS } from '@/lib/constants'
+import { CATEGORIES, PERMISSION_LEVELS, SORT_OPTIONS, SURFACES } from '@/lib/constants'
 import { X } from 'lucide-react'
 
 interface FilterBarProps {
   activeCategory?: string
+  activeSubcategory?: string
+  activePermission?: string
+  activeSurface?: string
   activeSort?: string
 }
 
-export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarProps) {
+export function FilterBar({
+  activeCategory,
+  activeSubcategory,
+  activePermission,
+  activeSurface,
+  activeSort = 'stars',
+}: FilterBarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -22,18 +31,27 @@ export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarPro
     } else {
       params.delete(key)
     }
+    if (key === 'category' && value !== 'mod') {
+      params.delete('sub')
+      params.delete('permission')
+      params.delete('surface')
+    }
     params.delete('page')
-    router.push(`/browse?${params.toString()}`)
+    const qs = params.toString()
+    router.push(qs ? `/browse?${qs}` : '/browse')
   }
 
   const clearAll = () => {
     router.push('/browse')
   }
 
-  const hasFilters = activeCategory || (activeSort && activeSort !== 'stars')
+  const showModFilters = activeCategory === 'mod' || Boolean(activePermission || activeSurface)
+  const hasFilters = Boolean(
+    activeCategory || activeSubcategory || activePermission || activeSurface || (activeSort && activeSort !== 'stars')
+  )
 
   return (
-    <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
+    <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap w-full sm:w-auto">
       {/* Category filter */}
       <Select value={activeCategory ?? 'all'} onValueChange={(v) => updateParam('category', v === 'all' ? null : v)}>
         <SelectTrigger className="flex-1 min-w-[130px] sm:w-40 sm:flex-none h-9">
@@ -48,6 +66,46 @@ export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarPro
           ))}
         </SelectContent>
       </Select>
+
+      {/* Permission level filter (when browsing Mods) */}
+      {showModFilters && (
+        <Select
+          value={activePermission ?? 'all'}
+          onValueChange={(v) => updateParam('permission', v === 'all' ? null : v)}
+        >
+          <SelectTrigger className="flex-1 min-w-[130px] sm:w-40 sm:flex-none h-9">
+            <SelectValue placeholder="All access" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All access levels</SelectItem>
+            {(['ui-only', 'reads', 'writes-or-runs', 'network'] as const).map((lvl) => (
+              <SelectItem key={lvl} value={lvl}>
+                {PERMISSION_LEVELS[lvl].label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+
+      {/* Surface filter (when browsing Mods) */}
+      {showModFilters && (
+        <Select
+          value={activeSurface ?? 'all'}
+          onValueChange={(v) => updateParam('surface', v === 'all' ? null : v)}
+        >
+          <SelectTrigger className="flex-1 min-w-[115px] sm:w-32 sm:flex-none h-9">
+            <SelectValue placeholder="All surfaces" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All surfaces</SelectItem>
+            {SURFACES.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
 
       {/* Sort */}
       <Select value={activeSort} onValueChange={(v) => updateParam('sort', v)}>
@@ -65,7 +123,7 @@ export function FilterBar({ activeCategory, activeSort = 'stars' }: FilterBarPro
 
       {/* Clear filters */}
       {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={clearAll} className="gap-1.5 h-9 text-muted-foreground">
+        <Button variant="ghost" size="sm" onClick={clearAll} className="gap-1.5 h-9 text-muted-foreground cursor-pointer">
           <X className="h-3.5 w-3.5" />
           Clear
         </Button>
