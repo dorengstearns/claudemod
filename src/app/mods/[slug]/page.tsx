@@ -27,6 +27,7 @@ import { CopyInstallBox } from '@/components/mods/CopyInstallBox'
 import { EmbedBadgeButton } from '@/components/mods/EmbedBadgeButton'
 import { PermissionPill } from '@/components/mods/PermissionPill'
 import { VoteButton } from '@/components/vote/VoteButton'
+import { NewsletterCapture } from '@/components/newsletter/NewsletterCapture'
 import { getModBySlug, getRelatedMods } from '@/lib/queries/mods'
 import {
   CATEGORIES,
@@ -450,8 +451,11 @@ export default async function ModPage({ params }: ModPageProps) {
             </div>
           )}
 
-          {/* Mobile details card at bottom of README */}
-          <div className="lg:hidden mb-8">{DetailsCard}</div>
+          {/* Mobile details card & digest capture at bottom of README */}
+          <div className="lg:hidden mb-8 space-y-4">
+            {DetailsCard}
+            <NewsletterCapture variant="compact" source="mod_sidebar" />
+          </div>
         </div>
 
         {/* Right sticky sidebar (Desktop) */}
@@ -476,6 +480,7 @@ export default async function ModPage({ params }: ModPageProps) {
 
           {PermissionsCard}
           {DetailsCard}
+          <NewsletterCapture variant="compact" source="mod_sidebar" />
         </aside>
       </div>
 

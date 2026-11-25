@@ -12,6 +12,7 @@
  */
 
 import { execSync } from 'node:child_process'
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { createRequire } from 'node:module'
@@ -63,6 +64,26 @@ const supabase = createClient(SUPABASE_URL, serviceKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
+const TOKEN_SECRET = process.env.NEWSLETTER_TOKEN_SECRET || env.NEWSLETTER_TOKEN_SECRET || serviceKey
+const HMAC_DOMAIN = 'claudemod:newsletter-optin:v1:'
+const OPT_IN_TTL_SECONDS = 90 * 24 * 60 * 60
+
+function buildOptInUrl(email, source = 'backlog_email') {
+  const normalized = String(email || '').trim().toLowerCase()
+  if (!normalized || !TOKEN_SECRET) return `${SITE_URL}/#digest`
+  const payload = {
+    e: normalized,
+    s: source,
+    exp: Math.floor(Date.now() / 1000) + OPT_IN_TTL_SECONDS,
+  }
+  const payloadB64 = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url')
+  const sig = crypto
+    .createHmac('sha256', `${HMAC_DOMAIN}${TOKEN_SECRET}`)
+    .update(payloadB64)
+    .digest('base64url')
+  return `${SITE_URL}/newsletter/opt-in?token=${encodeURIComponent(`${payloadB64}.${sig}`)}`
+}
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -72,9 +93,10 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;')
 }
 
-function buildBacklogEmail(authorName, mods) {
+function buildBacklogEmail(authorName, mods, recipientEmail) {
   const greeting = authorName ? `Hi ${authorName},` : 'Hi there,'
   const isMultiple = mods.length > 1
+  const optInUrl = buildOptInUrl(recipientEmail, 'backlog_email')
   const subject = isMultiple
     ? `Your ${mods.length} submissions are live on ClaudeMod`
     : `${mods[0].name} is live on ClaudeMod`
@@ -106,6 +128,8 @@ function buildBacklogEmail(authorName, mods) {
     'Thanks for building with the Claude Mod community,',
     'ClaudeMod',
     SITE_URL,
+    '',
+    `P.S. I'm starting a short weekly digest of the best new Claude Code mods and install commands — opt in with 1 click: ${optInUrl}`,
   ].join('\n')
 
   const htmlBlocks = mods
@@ -145,6 +169,11 @@ function buildBacklogEmail(authorName, mods) {
     <p style="margin: 0; font-size: 14px; color: #3f3f46;">
       Thanks for building with the Claude Mod community,<br />
       <strong>ClaudeMod</strong> · <a href="${SITE_URL}" style="color: #059669; text-decoration: none;">claudemod.com</a>
+    </p>
+    <p style="margin: 20px 0 0; padding-top: 14px; border-top: 1px solid #e4e4e7; font-size: 13px; color: #52525b;">
+      P.S. I'm starting a short weekly digest of the best new Claude Code mods and install commands —
+      <a href="${escapeHtml(optInUrl)}" style="color: #059669; font-weight: 500; text-decoration: underline;">opt in with 1 click</a>
+      (unsubscribe anytime).
     </p>
   </body>
 </html>`
@@ -211,7 +240,7 @@ async function main() {
       authorName: 'Builder',
       mods: [{ id: 'sample', name: 'Worklog', slug: 'worklog' }],
     }
-    const { subject, text, html } = buildBacklogEmail(sample.authorName, sample.mods)
+    const { subject, text, html } = buildBacklogEmail(sample.authorName, sample.mods, testRecipient)
     console.log(`Sending test email to ${testRecipient} from ${FROM_EMAIL}...`)
     const { data, error: sErr } = await resend.emails.send({
       from: FROM_EMAIL,
@@ -237,13 +266,13 @@ async function main() {
     const single = allGroups.find((g) => g.mods.length === 1)
     const multi = allGroups.find((g) => g.mods.length > 1)
     if (single) {
-      const p = buildBacklogEmail(single.authorName, single.mods)
+      const p = buildBacklogEmail(single.authorName, single.mods, single.email)
       console.log('\n--- SAMPLE SINGLE-MOD EMAIL ---')
       console.log('Subject:', p.subject)
       console.log(p.text)
     }
     if (multi) {
-      const p = buildBacklogEmail(multi.authorName, multi.mods)
+      const p = buildBacklogEmail(multi.authorName, multi.mods, multi.email)
       console.log('\n--- SAMPLE MULTI-MOD GROUPED EMAIL ---')
       console.log('Subject:', p.subject)
       console.log(p.text)
@@ -260,7 +289,7 @@ async function main() {
     let sent = 0
     let failed = 0
     for (const g of batch) {
-      const { subject, text, html } = buildBacklogEmail(g.authorName, g.mods)
+      const { subject, text, html } = buildBacklogEmail(g.authorName, g.mods, g.email)
       const idempotencyKey = `backlog/${g.mods.map((m) => m.id).sort().join('_').slice(0, 200)}`
 
       const { data, error: sErr } = await resend.emails.send(

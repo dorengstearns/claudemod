@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { SITE_URL } from '@/lib/constants'
+import { buildNewsletterOptInUrl } from '@/lib/newsletter-token'
 
 const BADGE_IMG_URL = 'https://img.shields.io/badge/Listed%20on-ClaudeMod-10b981?style=flat-square'
 
@@ -41,12 +42,16 @@ export interface EmailSendResult {
 
 export function buildApprovalEmailContent(params: {
   authorName?: string | null
+  recipientEmail?: string | null
   mods: ApprovedModSummary[]
   isBacklog?: boolean
 }) {
-  const { authorName, mods, isBacklog = false } = params
+  const { authorName, recipientEmail, mods, isBacklog = false } = params
   const greeting = authorName ? `Hi ${authorName},` : 'Hi there,'
   const isMultiple = mods.length > 1
+  const optInUrl = recipientEmail
+    ? buildNewsletterOptInUrl(recipientEmail, isBacklog ? 'backlog_email' : 'approval_email')
+    : `${SITE_URL}/#digest`
 
   const subject = isMultiple
     ? `Your ${mods.length} submissions are live on ClaudeMod`
@@ -83,6 +88,8 @@ export function buildApprovalEmailContent(params: {
     'Thanks for building with the Claude Mod community,',
     'ClaudeMod',
     SITE_URL,
+    '',
+    `P.S. I'm starting a short weekly digest of the best new Claude Code mods and install commands — opt in with 1 click: ${optInUrl}`,
   ].join('\n')
 
   const htmlModBlocks = mods
@@ -123,6 +130,11 @@ export function buildApprovalEmailContent(params: {
       Thanks for building with the Claude Mod community,<br />
       <strong>ClaudeMod</strong> · <a href="${SITE_URL}" style="color: #059669; text-decoration: none;">claudemod.com</a>
     </p>
+    <p style="margin: 20px 0 0; padding-top: 14px; border-top: 1px solid #e4e4e7; font-size: 13px; color: #52525b;">
+      P.S. I'm starting a short weekly digest of the best new Claude Code mods and install commands —
+      <a href="${escapeHtml(optInUrl)}" style="color: #059669; font-weight: 500; text-decoration: underline;">opt in with 1 click</a>
+      (unsubscribe anytime).
+    </p>
   </body>
 </html>`
 
@@ -144,7 +156,10 @@ export async function sendApprovalEmail(params: {
   if (!params.mods.length) return { ok: false, skipped: true, error: 'No mods provided' }
 
   const sender = getSenderConfig()
-  const { subject, text, html } = buildApprovalEmailContent(params)
+  const { subject, text, html } = buildApprovalEmailContent({
+    ...params,
+    recipientEmail: params.to,
+  })
   const idempotencyKey = `approval/${params.mods.map((m) => m.id).sort().join('_').slice(0, 200)}`
 
   const { data, error } = await resend.emails.send(

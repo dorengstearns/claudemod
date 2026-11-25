@@ -27,59 +27,71 @@ export function HomeModTabs({
   const [activeTab, setActiveTab] = useState('mods')
 
   return (
-    <section className="pb-14 pt-1">
+    <section className="pb-12">
       <Tabs defaultValue="mods" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Prominent Hero Tabs Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 border-b border-border/40">
-          <TabsList className="h-11 p-1 bg-muted/80 dark:bg-muted/50 w-full sm:w-auto grid grid-cols-3 sm:inline-flex rounded-xl border border-border/60 shadow-xs">
+        {/* Clean editorial underline tabs */}
+        <div className="flex items-end justify-between gap-4 border-b border-border/60 mb-5">
+          <TabsList className="h-auto p-0 bg-transparent rounded-none gap-1 sm:gap-2">
             <TabsTrigger
               value="mods"
-              className="gap-1.5 sm:gap-2 px-1.5 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border-border/40"
+              className="relative h-10 px-2.5 sm:px-3.5 pb-2.5 pt-2 rounded-none bg-transparent shadow-none border-0 border-b-2 border-transparent text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer gap-1.5 -mb-px data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-foreground data-[state=active]:text-foreground"
             >
-              <Boxes className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
+              <Boxes className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
               <span className="hidden sm:inline">Claude Mods</span>
               <span className="sm:hidden">Mods</span>
-              <span className="hidden md:inline-block text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold ml-1 tabular-nums">
+              <span className="text-[11px] font-normal text-muted-foreground/70 tabular-nums">
                 {totalClaudeModsCount}
               </span>
             </TabsTrigger>
 
             <TabsTrigger
               value="recent"
-              className="gap-1.5 sm:gap-2 px-1.5 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border-border/40"
+              className="relative h-10 px-2.5 sm:px-3.5 pb-2.5 pt-2 rounded-none bg-transparent shadow-none border-0 border-b-2 border-transparent text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer gap-1.5 -mb-px data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-foreground data-[state=active]:text-foreground"
             >
-              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500 shrink-0" />
+              <Clock className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
               <span className="hidden sm:inline">Recently Added</span>
               <span className="sm:hidden">Recent</span>
-              <span className="hidden md:inline-block text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold ml-1">
-                New
-              </span>
             </TabsTrigger>
 
             <TabsTrigger
               value="top"
-              className="gap-1.5 sm:gap-2 px-1.5 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border-border/40"
+              className="relative h-10 px-2.5 sm:px-3.5 pb-2.5 pt-2 rounded-none bg-transparent shadow-none border-0 border-b-2 border-transparent text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer gap-1.5 -mb-px data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-foreground data-[state=active]:text-foreground"
             >
-              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 shrink-0" />
+              <Sparkles className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
               <span className="hidden sm:inline">Top All-Time</span>
               <span className="sm:hidden">Top</span>
             </TabsTrigger>
           </TabsList>
 
-          <div className="hidden sm:block">
+          <div className="hidden sm:block pb-2.5 shrink-0">
             {activeTab === 'mods' && (
-              <Link href="/browse?category=mod" prefetch={false} className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5 transition-colors">
-                Browse all {totalClaudeModsCount} Claude Mods <ArrowRight className="h-3.5 w-3.5" />
+              <Link
+                href="/browse?category=mod"
+                prefetch={false}
+                className="text-xs font-medium text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors"
+              >
+                Browse all {totalClaudeModsCount}
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             )}
             {activeTab === 'recent' && (
-              <Link href="/browse?sort=newest" prefetch={false} className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5 transition-colors">
-                View all newest additions <ArrowRight className="h-3.5 w-3.5" />
+              <Link
+                href="/browse?sort=newest"
+                prefetch={false}
+                className="text-xs font-medium text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors"
+              >
+                View all recent
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             )}
             {activeTab === 'top' && (
-              <Link href="/browse" prefetch={false} className="text-sm font-medium text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1.5 transition-colors">
-                Browse full directory <ArrowRight className="h-3.5 w-3.5" />
+              <Link
+                href="/browse"
+                prefetch={false}
+                className="text-xs font-medium text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors"
+              >
+                Full directory
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             )}
           </div>
@@ -87,7 +99,7 @@ export function HomeModTabs({
 
         {/* Tab 1: Claude Mods (In-process TypeScript Mods) */}
         <TabsContent value="mods" className="mt-0 focus-visible:outline-none">
-          {/* 1-click Mod Sub-Category Pills */}
+          {/* Clean flat sub-category chips */}
           <div className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-1 mb-5">
             {MOD_SUBCATEGORIES.map((sc) => {
               const count = modSubcategoryCounts[sc.value] ?? 0
@@ -97,10 +109,12 @@ export function HomeModTabs({
                   key={sc.value}
                   href={`/browse?category=mod&sub=${sc.value}`}
                   prefetch={false}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-muted/45 text-muted-foreground hover:text-foreground hover:bg-muted/90 border border-border/50 transition-colors shrink-0"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-muted/40 text-muted-foreground hover:text-foreground hover:bg-muted/80 border border-transparent hover:border-border/50 transition-colors shrink-0"
                 >
                   <span>{sc.label}</span>
-                  <span className="text-[10px] opacity-65 tabular-nums">{count}</span>
+                  <span className="text-[11px] font-normal text-muted-foreground/60 tabular-nums">
+                    {count}
+                  </span>
                 </Link>
               )
             })}

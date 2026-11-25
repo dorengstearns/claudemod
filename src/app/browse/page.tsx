@@ -7,6 +7,7 @@ import { FilterBar } from '@/components/browse/FilterBar'
 import { CategoryNav } from '@/components/browse/CategoryNav'
 import { ModGrid } from '@/components/mods/ModGrid'
 import { ModCardSkeleton } from '@/components/mods/ModCardSkeleton'
+import { NewsletterCapture } from '@/components/newsletter/NewsletterCapture'
 import { Button } from '@/components/ui/button'
 import {
   searchMods,
@@ -299,6 +300,10 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
           baseParams={baseParams}
         />
       </Suspense>
+
+      <div className="mt-10">
+        <NewsletterCapture variant="banner" source="browse" />
+      </div>
     </div>
     </>
   )

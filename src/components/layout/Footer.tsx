@@ -73,6 +73,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/sponsor" prefetch={false} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Sponsor
+                </Link>
+              </li>
+              <li>
                 <a
                   href="/rss.xml"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
