@@ -39,14 +39,13 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
   const [count, setCount] = useState(githubStars)
   const [voted, setVoted] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [hydrated, setHydrated] = useState(false)
+  const [hydratedKey, setHydratedKey] = useState<string | null>(null)
+
+  const currentKey = user ? `${user.id}:${modId}` : null
 
   useEffect(() => {
-    if (authLoading) return
-    if (!user) {
-      setHydrated(true)
-      return
-    }
+    if (authLoading || !user || !currentKey) return
+    let cancelled = false
     const supabase = createClient()
     supabase
       .from('votes')
@@ -55,10 +54,17 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
       .eq('user_id', user.id)
       .maybeSingle()
       .then(({ data }) => {
+        if (cancelled) return
         setVoted(!!data)
-        setHydrated(true)
+        setHydratedKey(currentKey)
       })
-  }, [modId, user, authLoading])
+    return () => {
+      cancelled = true
+    }
+  }, [modId, user, authLoading, currentKey])
+
+  const hydrated = !authLoading && (!user || hydratedKey === currentKey)
+  const isVoted = Boolean(user && hydratedKey === currentKey && voted)
 
   const handleVote = async () => {
     if (!user) {
@@ -68,13 +74,13 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
 
     const supabase = createClient()
 
-    const willBeVoted = !voted
+    const willBeVoted = !isVoted
 
     // Optimistic update
     const prevCount = count
-    const prevVoted = voted
+    const prevVoted = isVoted
     setVoted(willBeVoted)
-    setCount((c) => (voted ? c - 1 : c + 1))
+    setCount((c) => (isVoted ? c - 1 : c + 1))
     setLoading(true)
 
     try {
@@ -96,7 +102,7 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
     }
   }
 
-  const tooltip = voted
+  const tooltip = isVoted
     ? `${count.toLocaleString()} GitHub stars · Click to unstar`
     : user
     ? `${count.toLocaleString()} GitHub stars · Click to star on GitHub`
@@ -104,21 +110,21 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
 
   return (
     <Button
-      variant={voted ? 'default' : 'outline'}
+      variant={isVoted ? 'default' : 'outline'}
       size="sm"
       onClick={handleVote}
       disabled={loading || !hydrated}
       title={tooltip}
       className={cn(
         'gap-1.5 min-w-[3.5rem] font-semibold tabular-nums cursor-pointer',
-        voted && 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:bg-amber-500/25'
+        isVoted && 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:bg-amber-500/25'
       )}
-      aria-label={voted ? 'Unstar this mod' : 'Star this mod on GitHub'}
+      aria-label={isVoted ? 'Unstar this mod' : 'Star this mod on GitHub'}
     >
       <Star
         className={cn(
           'h-3.5 w-3.5 shrink-0',
-          voted ? 'fill-amber-500 text-amber-500' : 'text-amber-500/85'
+          isVoted ? 'fill-amber-500 text-amber-500' : 'text-amber-500/85'
         )}
       />
       {formatStarCount(count)}

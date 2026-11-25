@@ -1,8 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, ArrowRight } from 'lucide-react'
+
+const emptySubscribe = () => () => {}
+const getModifierSnapshot = () =>
+  /Mac|iPod|iPhone|iPad/i.test(navigator.platform) ? '⌘' : 'Ctrl'
+const getServerModifierSnapshot = () => '⌘'
 
 interface HeroSearchBarProps {
   totalCount: number
@@ -11,14 +16,11 @@ interface HeroSearchBarProps {
 export function HeroSearchBar({ totalCount }: HeroSearchBarProps) {
   const router = useRouter()
   const [query, setQuery] = useState('')
-  const [modifier, setModifier] = useState('⌘')
-
-  useEffect(() => {
-    if (typeof navigator !== 'undefined') {
-      const isMac = /Mac|iPod|iPhone|iPad/i.test(navigator.platform)
-      setModifier(isMac ? '⌘' : 'Ctrl')
-    }
-  }, [])
+  const modifier = useSyncExternalStore(
+    emptySubscribe,
+    getModifierSnapshot,
+    getServerModifierSnapshot
+  )
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

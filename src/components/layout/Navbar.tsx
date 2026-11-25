@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -19,6 +19,11 @@ import { Search, Plus, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CATEGORIES } from '@/lib/constants'
 
+const emptySubscribe = () => () => {}
+const getModifierSnapshot = () =>
+  /Mac|iPod|iPhone|iPad/i.test(navigator.platform) ? '⌘' : 'Ctrl'
+const getServerModifierSnapshot = () => '⌘'
+
 const navLinks = [
   { href: '/browse', label: 'Browse' },
   { href: '/install', label: 'Install' },
@@ -27,14 +32,11 @@ const navLinks = [
 export function Navbar() {
   const pathname = usePathname()
   const { user, loading } = useAuth()
-  const [modifier, setModifier] = useState('⌘')
-
-  useEffect(() => {
-    if (typeof navigator !== 'undefined') {
-      const isMac = /Mac|iPod|iPhone|iPad/i.test(navigator.platform)
-      setModifier(isMac ? '⌘' : 'Ctrl')
-    }
-  }, [])
+  const modifier = useSyncExternalStore(
+    emptySubscribe,
+    getModifierSnapshot,
+    getServerModifierSnapshot
+  )
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">

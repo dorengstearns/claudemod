@@ -59,32 +59,48 @@ export function CommandMenu() {
   }, [open, popular.length])
 
   React.useEffect(() => {
-    if (!query.trim()) {
-      setResults([])
-      setLoading(false)
-      return
-    }
+    if (!query.trim()) return
 
+    let cancelled = false
     const timer = setTimeout(async () => {
       setLoading(true)
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
         const data = await res.json()
-        setResults(data.results || [])
+        if (!cancelled) {
+          setResults(data.results || [])
+        }
       } catch (err) {
         console.error('Command search error:', err)
-        setResults([])
+        if (!cancelled) {
+          setResults([])
+        }
       } finally {
-        setLoading(false)
+        if (!cancelled) {
+          setLoading(false)
+        }
       }
     }, 220)
 
-    return () => clearTimeout(timer)
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
   }, [query])
+
+  const handleQueryChange = React.useCallback((value: string) => {
+    setQuery(value)
+    if (!value.trim()) {
+      setResults([])
+      setLoading(false)
+    }
+  }, [])
 
   const runCommand = React.useCallback((command: () => unknown) => {
     setOpen(false)
     setQuery('')
+    setResults([])
+    setLoading(false)
     command()
   }, [])
 
@@ -132,7 +148,7 @@ export function CommandMenu() {
       <CommandInput
         placeholder="Search Claude mods, skills, MCP servers, or authors..."
         value={query}
-        onValueChange={setQuery}
+        onValueChange={handleQueryChange}
       />
       <CommandList>
         <CommandEmpty>
