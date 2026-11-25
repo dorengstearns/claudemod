@@ -5,7 +5,6 @@ import {
   ExternalLink,
   Star,
   Calendar,
-  Github,
   ArrowLeft,
   Tag,
   Shield,
@@ -17,6 +16,7 @@ import {
   Layers,
   RefreshCw,
 } from 'lucide-react'
+import { GitHubIcon } from '@/components/shared/GitHubIcon'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -182,7 +182,7 @@ export default async function ModPage({ params }: ModPageProps) {
       <dl className="space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           <dt className="text-muted-foreground flex items-center gap-1.5">
-            <Github className="h-3.5 w-3.5" />
+            <GitHubIcon className="h-3.5 w-3.5" />
             Author
           </dt>
           <dd className="font-medium truncate">
@@ -372,7 +372,7 @@ export default async function ModPage({ params }: ModPageProps) {
               <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
               <a href={mod.github_url} target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-none">
                 <Button variant="outline" size="sm" className="gap-2 w-full sm:w-auto cursor-pointer">
-                  <Github className="h-4 w-4" />
+                  <GitHubIcon className="h-4 w-4" />
                   View on GitHub
                   <ExternalLink className="h-3 w-3 text-muted-foreground" />
                 </Button>
@@ -390,7 +390,7 @@ export default async function ModPage({ params }: ModPageProps) {
           {/* Meta row (compact) */}
           <div className="flex items-center gap-4 text-sm text-muted-foreground mb-5 flex-wrap lg:hidden">
             <span className="flex items-center gap-1.5">
-              <Github className="h-4 w-4" />
+              <GitHubIcon className="h-4 w-4" />
               <a
                 href={`https://github.com/${mod.author_github}`}
                 target="_blank"
@@ -460,7 +460,7 @@ export default async function ModPage({ params }: ModPageProps) {
             <VoteButton modId={mod.id} githubStars={mod.github_stars} githubUrl={mod.github_url} slug={mod.slug} />
             <a href={mod.github_url} target="_blank" rel="noopener noreferrer" className="flex-1">
               <Button variant="outline" size="sm" className="gap-2 w-full cursor-pointer">
-                <Github className="h-4 w-4" />
+                <GitHubIcon className="h-4 w-4" />
                 GitHub
                 <ExternalLink className="h-3 w-3 text-muted-foreground" />
               </Button>

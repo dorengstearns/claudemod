@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Github } from 'lucide-react'
+import { GitHubIcon } from '@/components/shared/GitHubIcon'
 import { createClient } from '@/lib/supabase/client'
 
 interface GitHubSignInProps {
@@ -28,7 +28,7 @@ export function GitHubSignIn({
 
   return (
     <Button variant={variant} size={size} onClick={handleSignIn} className="gap-2" aria-label={label}>
-      <Github className="h-4 w-4" />
+      <GitHubIcon className="h-4 w-4" />
       <span className="hidden sm:inline">{label}</span>
     </Button>
   )
