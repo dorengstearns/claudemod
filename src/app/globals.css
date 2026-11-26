@@ -124,3 +124,98 @@
     @apply bg-background text-foreground overflow-x-hidden;
   }
 }
+
+/* Container-responsive admin subscribers table */
+.subscribers-table-wrapper {
+  overflow: auto;
+  max-inline-size: 100%;
+  max-block-size: min(520px, 75vh);
+  container-type: inline-size;
+}
+
+.subscribers-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  --label-source: "Source";
+  --label-status: "Status";
+  --label-joined: "Joined";
+  --label-action: "Action";
+}
+
+.subscribers-table thead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+}
+
+.subscribers-table tbody th {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+}
+
+@container (width < 600px) {
+  .subscribers-table,
+  .subscribers-table thead,
+  .subscribers-table tbody,
+  .subscribers-table tr,
+  .subscribers-table th,
+  .subscribers-table td {
+    display: block;
+  }
+
+  .subscribers-table thead {
+    display: none;
+  }
+
+  .subscribers-table tbody tr {
+    margin-block-end: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .subscribers-table tbody th {
+    position: sticky;
+    inset-block-start: 0;
+    inset-inline-start: auto;
+    z-index: 2;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .subscribers-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .subscribers-table tbody td:nth-child(2)::before {
+    content: var(--label-source) ": ";
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .subscribers-table tbody td:nth-child(3)::before {
+    content: var(--label-status) ": ";
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .subscribers-table tbody td:nth-child(4)::before {
+    content: var(--label-joined) ": ";
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .subscribers-table tbody td:nth-child(5)::before {
+    content: var(--label-action) ": ";
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+}

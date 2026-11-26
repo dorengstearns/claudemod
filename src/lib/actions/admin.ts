@@ -151,3 +151,15 @@ export async function rejectMod(id: string, options?: { reason?: string; sendEma
 
   revalidatePath('/admin')
 }
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export async function deleteSubscriber(id: string) {
+  await assertAdmin()
+  if (!UUID_RE.test(id)) {
+    throw new Error('Invalid subscriber ID')
+  }
+  const admin = createAdminClient()
+  await admin.from('newsletter_subscribers').delete().eq('id', id)
+  revalidatePath('/admin')
+}
