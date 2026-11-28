@@ -65,10 +65,10 @@ export function UnfurlFeed({
             <button
               type="button"
               onClick={() => setIsExpanded(true)}
-              className="w-full group relative py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl border border-border/80 bg-background/90 dark:bg-card/90 backdrop-blur-md hover:bg-muted/80 hover:border-primary/50 transition-all duration-200 shadow-sm flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-foreground cursor-pointer"
+              className="w-full group relative py-3 px-5 rounded-lg border border-border bg-card/95 backdrop-blur-md hover:bg-accent/70 hover:border-foreground/20 transition-[background-color,border-color] duration-150 ease-out shadow-xs flex items-center justify-center gap-2 text-sm font-medium text-foreground cursor-pointer"
             >
               <span>{viewMoreLabel}</span>
-              <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-y-0.5 transition-transform" />
+              <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-y-0.5 transition-transform duration-150" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -76,14 +76,14 @@ export function UnfurlFeed({
 
       {/* Clean horizontal anchor bar when unfurled */}
       {isExpanded && (
-        <div className="mt-8 pt-4 border-t border-border/50 flex items-center justify-between gap-3 text-xs sm:text-sm">
+        <div className="mt-8 pt-4 border-t border-border/60 flex items-center justify-between gap-3 text-sm">
           {browseAllHref && (
             <Link
               href={browseAllHref}
               prefetch={false}
-              className="text-primary hover:underline font-medium flex items-center gap-1.5 transition-colors truncate"
+              className="text-foreground hover:text-emerald-700 dark:hover:text-emerald-400 font-medium flex items-center gap-1.5 transition-colors truncate"
             >
-              <span className="truncate">{browseAllLabel}</span> <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{browseAllLabel}</span> <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             </Link>
           )}
           <button
@@ -91,7 +91,7 @@ export function UnfurlFeed({
             onClick={handleCollapse}
             className="text-muted-foreground hover:text-foreground flex items-center gap-1 cursor-pointer transition-colors shrink-0"
           >
-            Show less <ChevronUp className="h-3.5 w-3.5" />
+            Show less <ChevronUp className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </div>
       )}

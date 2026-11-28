@@ -13,8 +13,8 @@ export function Footer() {
               <Image src="/mascot.png" alt="" width={22} height={22} />
               <span>ClaudeMod</span>
             </Link>
-            <p className="text-sm text-muted-foreground">
-              The home for Claude Code modifications — skills, MCP servers, agents, and more.
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Community directory for Claude Code mods, skills, MCP servers, and hooks.
             </p>
           </div>
 
@@ -99,11 +99,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">
+        <div className="mt-8 border-t border-border/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-[13px] text-muted-foreground">
             © {new Date().getFullYear()} ClaudeMod. Community-maintained.
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[13px] text-muted-foreground">
             Not affiliated with Anthropic.
           </p>
         </div>

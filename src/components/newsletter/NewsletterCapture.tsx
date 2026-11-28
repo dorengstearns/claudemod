@@ -162,25 +162,25 @@ export function NewsletterCapture({
     return (
       <div
         className={cn(
-          'md:sticky md:top-14 z-40 w-full border-b border-emerald-500/20 bg-emerald-50/90 dark:bg-emerald-950/35 md:backdrop-blur',
+          'md:sticky md:top-15 z-40 w-full border-b border-emerald-600/20 dark:border-emerald-400/20 bg-emerald-50/95 dark:bg-[#0d1c17]/95 md:backdrop-blur-md',
           className
         )}
       >
         <div aria-live="polite" className="sr-only">
           {liveAnnouncement}
         </div>
-        <div className="container mx-auto max-w-6xl px-4 py-1.5">
+        <div className="container mx-auto max-w-6xl px-3 sm:px-4 py-2">
           {status === 'success' ? (
-            <div className="flex items-center justify-between gap-3 min-h-7">
-              <div className="flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-300 font-medium">
-                <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <div className="flex items-center justify-between gap-3 min-h-8">
+              <div className="flex items-center gap-2 text-[13px] text-emerald-800 dark:text-emerald-300 font-medium">
+                <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>{successMessage}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setDismissed(true)}
                 aria-label="Dismiss digest bar"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-md text-emerald-800/60 dark:text-emerald-200/60 hover:text-foreground hover:bg-emerald-500/15 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-emerald-900/60 dark:text-emerald-200/60 hover:text-foreground hover:bg-emerald-500/15 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -210,16 +210,14 @@ export function NewsletterCapture({
               <div className="flex items-center justify-between gap-2 min-w-0">
                 <label
                   htmlFor={inputId}
-                  className="flex items-center gap-2 text-xs min-w-0 cursor-pointer"
+                  className="flex items-center gap-2 text-[13px] min-w-0 cursor-pointer"
                 >
-                  <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 shrink-0">
-                    <Mail className="h-3 w-3" aria-hidden="true" />
+                  <Mail className="h-4 w-4 text-emerald-700 dark:text-emerald-400 shrink-0" aria-hidden="true" />
+                  <span className="font-semibold text-emerald-950 dark:text-emerald-50 shrink-0">
+                    Weekly Claude Mods digest
                   </span>
-                  <span className="font-semibold text-emerald-950 dark:text-emerald-100 truncate">
-                    Weekly Digest
-                  </span>
-                  <span className="hidden sm:inline text-emerald-900/75 dark:text-emerald-200/75 truncate">
-                    — Top new Claude mods &amp; install commands every week.
+                  <span className="hidden sm:inline text-emerald-900/80 dark:text-emerald-200/80 truncate">
+                    Top new mods &amp; install commands every week.
                   </span>
                 </label>
 
@@ -227,13 +225,13 @@ export function NewsletterCapture({
                   type="button"
                   onClick={() => setDismissed(true)}
                   aria-label="Dismiss digest bar"
-                  className="md:hidden inline-flex h-7 w-7 items-center justify-center rounded-md text-emerald-800/60 dark:text-emerald-200/60 hover:text-foreground hover:bg-emerald-500/15 transition-colors shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="md:hidden inline-flex h-7 w-7 items-center justify-center rounded-md text-emerald-900/60 dark:text-emerald-200/60 hover:text-foreground hover:bg-emerald-500/15 transition-colors shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
               </div>
 
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
                 <input
                   ref={inputRef}
                   id={inputId}
@@ -254,7 +252,7 @@ export function NewsletterCapture({
                   aria-invalid={hasError ? 'true' : 'false'}
                   aria-describedby={hasError ? errorId : undefined}
                   className={cn(
-                    'flex-1 min-w-0 md:w-52 lg:w-60 min-h-9 md:min-h-7 h-9 md:h-7 rounded-md border bg-background px-2.5 text-base md:text-xs text-foreground placeholder:text-muted-foreground/65 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:border-emerald-600/60 user-invalid:border-destructive',
+                    'flex-1 min-w-0 md:w-52 lg:w-60 min-h-9 md:min-h-8 h-9 md:h-8 rounded-md border bg-card px-3 text-base md:text-[13px] text-foreground placeholder:text-muted-foreground/70 transition-[border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:border-emerald-600/60 user-invalid:border-destructive',
                     hasError ? 'border-destructive focus-visible:ring-destructive/35' : 'border-emerald-600/25 dark:border-emerald-400/25'
                   )}
                 />
@@ -262,7 +260,7 @@ export function NewsletterCapture({
                   type="submit"
                   size="sm"
                   disabled={status === 'submitting'}
-                  className="min-h-9 md:min-h-7 h-9 md:h-7 px-3 text-xs font-medium shrink-0 cursor-pointer rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-zinc-950 dark:hover:bg-emerald-400 transition-colors"
+                  className="min-h-9 md:min-h-8 h-9 md:h-8 px-3.5 text-[13px] font-medium shrink-0 cursor-pointer rounded-md bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-zinc-950 dark:hover:bg-emerald-400 transition-colors"
                 >
                   {status === 'submitting' ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -274,7 +272,7 @@ export function NewsletterCapture({
                   type="button"
                   onClick={() => setDismissed(true)}
                   aria-label="Dismiss digest bar"
-                  className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-md text-emerald-800/55 dark:text-emerald-200/55 hover:text-foreground hover:bg-emerald-500/15 transition-colors shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="hidden md:inline-flex h-8 w-8 items-center justify-center rounded-md text-emerald-900/55 dark:text-emerald-200/55 hover:text-foreground hover:bg-emerald-500/15 transition-colors shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
@@ -284,7 +282,7 @@ export function NewsletterCapture({
           {hasError && (
             <p
               id={errorId}
-              className="flex items-center md:justify-end gap-1.5 text-xs text-destructive mt-1.5 md:mt-1 md:pr-8"
+              className="flex items-center md:justify-end gap-1.5 text-[13px] text-destructive mt-1.5 md:mt-1 md:pr-10"
             >
               <AlertCircle className="h-3.5 w-3.5 shrink-0" role="img" aria-label="Error" />
               <span>{errorMessage}</span>
@@ -416,22 +414,18 @@ export function NewsletterCapture({
       id="digest"
       aria-labelledby={headingId}
       className={cn(
-        'rounded-xl border border-emerald-500/25 bg-emerald-50/55 dark:bg-emerald-950/20 px-5 py-5 sm:px-6 sm:py-6 scroll-mt-24',
+        'rounded-xl border border-emerald-600/25 dark:border-emerald-400/20 bg-emerald-600/[0.06] dark:bg-emerald-500/[0.08] px-6 py-7 sm:px-8 sm:py-8 scroll-mt-24',
         className
       )}
     >
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
-        <div className="max-w-lg space-y-1.5">
-          <div className="inline-flex items-center gap-2">
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 shrink-0">
-              <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-            </span>
-            <h2 id={headingId} className="text-base font-semibold tracking-tight text-emerald-950 dark:text-emerald-50">
-              Weekly Claude Mods Digest
-            </h2>
-          </div>
-          <p id={hintId} className="text-sm text-emerald-950/75 dark:text-emerald-100/75 leading-relaxed">
-            Top new Claude Code mods, copy-paste install commands, and permission notes once a week. Unsubscribe anytime.
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="max-w-lg space-y-2">
+          <h2 id={headingId} className="text-base sm:text-lg font-semibold tracking-[-0.015em] text-foreground flex items-center gap-2">
+            <Mail className="h-4 w-4 text-emerald-700 dark:text-emerald-400 shrink-0" aria-hidden="true" />
+            <span>Get the best new Claude mods every week</span>
+          </h2>
+          <p id={hintId} className="text-sm text-muted-foreground leading-relaxed">
+            A concise weekly digest of newly verified Claude Code mods, copy-paste install commands, and static permission summaries. Unsubscribe anytime.
           </p>
         </div>
 
@@ -441,7 +435,7 @@ export function NewsletterCapture({
           </div>
 
           {status === 'success' ? (
-            <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
+            <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-800 dark:text-emerald-300">
               <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span>{successMessage}</span>
             </div>
@@ -467,7 +461,7 @@ export function NewsletterCapture({
                 />
               </div>
 
-              <label htmlFor={inputId} className="block text-xs font-medium text-emerald-950/80 dark:text-emerald-100/80 mb-1.5">
+              <label htmlFor={inputId} className="block text-[13px] font-medium text-foreground/85 mb-1.5">
                 Email address
               </label>
 
@@ -492,14 +486,14 @@ export function NewsletterCapture({
                   aria-invalid={hasError ? 'true' : 'false'}
                   aria-describedby={describedBy}
                   className={cn(
-                    'flex-1 min-h-12 sm:min-h-10 rounded-lg border bg-background px-3.5 py-2 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/35 focus-visible:border-emerald-600/60 user-invalid:border-destructive',
+                    'flex-1 min-h-12 sm:min-h-10 rounded-lg border bg-card px-3.5 py-2 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/70 transition-[border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:border-emerald-600/60 user-invalid:border-destructive',
                     hasError ? 'border-destructive focus-visible:ring-destructive/30' : 'border-emerald-600/25 dark:border-emerald-400/25'
                   )}
                 />
                 <Button
                   type="submit"
                   disabled={status === 'submitting'}
-                  className="min-h-12 sm:min-h-10 px-5 gap-1.5 shrink-0 cursor-pointer bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-zinc-950 dark:hover:bg-emerald-400"
+                  className="min-h-12 sm:min-h-10 px-5 text-sm font-medium gap-1.5 shrink-0 cursor-pointer bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-zinc-950 dark:hover:bg-emerald-400"
                 >
                   {status === 'submitting' ? (
                     <>
@@ -518,9 +512,9 @@ export function NewsletterCapture({
               {hasError && (
                 <p
                   id={errorId}
-                  className="flex items-start gap-1.5 text-xs text-destructive mt-1.5"
+                  className="flex items-start gap-1.5 text-[13px] text-destructive mt-1.5"
                 >
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" role="img" aria-label="Error" />
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" role="img" aria-label="Error" />
                   <span>{errorMessage}</span>
                 </p>
               )}

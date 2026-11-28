@@ -116,7 +116,7 @@ export function VoteButton({ modId, githubStars, githubUrl, slug }: VoteButtonPr
       disabled={loading || !hydrated}
       title={tooltip}
       className={cn(
-        'gap-1.5 min-w-[3.5rem] font-semibold tabular-nums cursor-pointer',
+        'gap-1.5 min-w-[3.5rem] text-[13px] font-semibold tabular-nums cursor-pointer',
         isVoted && 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/40 hover:bg-amber-500/25'
       )}
       aria-label={isVoted ? 'Unstar this mod' : 'Star this mod on GitHub'}
