@@ -104,22 +104,26 @@ export default async function HomePage() {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
               <div>
                 <h2 className="text-base font-semibold tracking-[-0.015em] text-foreground">
-                  Official example mods from Anthropic
+                  Official mods from Anthropic
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Reference in-process mods from{' '}
+                  First-party and reference in-process mods from{' '}
                   <code className="text-[13px] font-mono bg-muted px-1.5 py-0.5 rounded">
-                    anthropics/claude-code-playground
+                    anthropics/claude-plugins-official
+                  </code>{' '}
+                  and{' '}
+                  <code className="text-[13px] font-mono bg-muted px-1.5 py-0.5 rounded">
+                    claude-code-playground
                   </code>
                 </p>
               </div>
               <a
-                href="https://github.com/anthropics/claude-code-playground/tree/main/claude-code/mods"
+                href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[13px] font-medium text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0 transition-colors"
               >
-                View playground repo <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                View official plugins <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

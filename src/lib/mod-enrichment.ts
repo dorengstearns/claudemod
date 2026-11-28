@@ -235,7 +235,7 @@ export async function enrichModFromGitHub(input: ModEnrichmentInput): Promise<Mo
   )
   const allPaths = (treeData?.tree ?? []).filter((t) => t.type === 'blob').map((t) => t.path)
   const scopedPaths = subpath
-    ? allPaths.filter((p) => p.startsWith(subpath + '/') || p.includes('.claude-plugin'))
+    ? allPaths.filter((p) => p.startsWith(subpath + '/'))
     : allPaths
 
   // 1. Install commands from marketplace.json + plugin.json (with README / --plugin-dir fallback)
